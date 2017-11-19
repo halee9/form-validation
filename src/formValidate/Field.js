@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class Field extends Component {
+export class Field extends Component {
   touched = false;
   change = (value) => {
     const { name, validates } = this.props;
@@ -62,4 +62,3 @@ Field.propTypes = {
   label: PropTypes.string,
 };
 
-export default Field;

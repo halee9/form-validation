@@ -1,7 +1,7 @@
 export const required = value => (value ? '' : 'Required');
-const maxLength = max => value =>
+export const maxLength = max => value =>
   value && value.length > max ? `Must be ${max} characters or less` : '';
-const minLength = min => value =>
+export const minLength = min => value =>
   value && value.length < min ? `Must be ${min} characters or more` : '';
 const number = value =>
   value && isNaN(Number(value)) ? 'Must be a number' : '';

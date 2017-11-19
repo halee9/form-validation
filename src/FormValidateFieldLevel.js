@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import withForm from './helpers/withForm';
-import { username, email, required } from './helpers/validate';
-
-import Field from './components/Field';
+import { 
+  withForm, 
+  Field, 
+  username, 
+  email, 
+  required, 
+  minLength, 
+  maxLength 
+} from './formValidate';
 
 class FormValidateFieldLevel extends Component {
   render() {

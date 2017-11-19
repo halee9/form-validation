@@ -15,7 +15,7 @@ const onLoad = data => {
   return { type: "onload", payload: data }
 };
 
-export default function withForm(formData) {
+export function withForm(formData) {
   const { formName, validate, remoteValidate } = formData;
   
   return function(WrappedComponent){

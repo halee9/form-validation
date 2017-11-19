@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import withForm from './helpers/withForm';
-import { onChange, onSubmit } from './actions/formAction';
-import { username, email, required } from './helpers/validate';
-
-import Field from './components/Field';
+import { withForm, Field }from './formValidate';
 
 const validate = values => {
   const errors = {}
@@ -19,14 +15,12 @@ const validate = values => {
   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
     errors.email = 'Invalid email address'
   }
-  
   return errors
 }
 
 class FormValidateFormLevel extends Component {
   render() {
-    const { handleSubmit, formName } = this.props;
-    console.log(this.props);
+    const { handleSubmit } = this.props;
     return (
       <div>
         <form onSubmit={handleSubmit}>
@@ -45,4 +39,4 @@ class FormValidateFormLevel extends Component {
   }
 }
 
-export default withForm({ formName: "form1", validate: validate })(FormValidateFormLevel);
+export default withForm({ formName: "form1", validate })(FormValidateFormLevel);
