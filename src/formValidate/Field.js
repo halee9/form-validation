@@ -36,6 +36,7 @@ export class Field extends Component {
                 this.change(e.target.value);
               }}
               required={required}
+              {...this.props}
             />
           <div>{form && form.errors && form.errors[name]}</div>
         </label>
