@@ -15,15 +15,10 @@ export class Field extends Component {
     
   }
   render() {
-    const { name, type, label, required } = this.props;
+    const { name, type, label } = this.props;
     const { form } = this.context;
-    // const form = forms[formName];
-    // console.log("form: ", form);
-    // console.log("context: ", this.context.formName)
     return (
       <div>
-        <label>
-          <div>{ label }</div>
           <input 
               type={type} 
               name={name}
@@ -35,19 +30,15 @@ export class Field extends Component {
                 this.touched = true;
                 this.change(e.target.value);
               }}
-              required={required}
               {...this.props}
             />
           <div>{form && form.errors && form.errors[name]}</div>
-        </label>
-        <div></div>
       </div>
     )
   }
 }
 
 Field.contextTypes = {
-  formName: PropTypes.string,
   form: PropTypes.object,
   onChange: PropTypes.func,
 };
@@ -59,7 +50,6 @@ Field.defaultProps = {
 Field.propTypes = {
   name: PropTypes.string,
   type: PropTypes.string,
-  validates: PropTypes.array,
   label: PropTypes.string,
 };
 

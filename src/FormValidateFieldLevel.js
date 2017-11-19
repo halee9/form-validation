@@ -20,13 +20,13 @@ class FormValidateFieldLevel extends Component {
         <form onSubmit={handleSubmit}>
           <Field
             name= 'username'
-            label= 'UserName: '
-            validates= {[username]}
+            validates= {[required, minLength(2), maxLength(10)]}
+            placeholder='User Name'
           />
           <Field
             name= 'email'
-            label= 'Email: '
             validates= {[email]}
+            placeholder='Email'
           />
             
           <button type="submit">Submit</button>

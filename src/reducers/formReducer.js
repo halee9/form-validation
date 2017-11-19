@@ -14,7 +14,14 @@ export default function formReducer(state={}, action){
 
     let errors = {};
     if (validates){
-      errors = { ...form.errors, [fieldName]: validates.map(v => v(payload.value)).join(", ")};
+      let err = '';
+      for (let i=0; i<validates.length; i++){
+        err = validates[i](value);
+        if (typeof err !== 'undefined' && err !== ''){
+          break; 
+        }
+      }
+      errors = { ...form.errors, [fieldName]: err };
     }
     else if (form.formValidate){
       const errs = form.formValidate({ [fieldName]: value });

@@ -28,8 +28,7 @@ export function withForm(formData) {
   
     class HOC extends Component {
       getChildContext() {
-        // console.log("hoc form: ", this.props.form)
-        return { formName: formName, form: this.props.form, onChange: this.props.onChange };
+        return { form: this.props.form, onChange: this.props.onChange };
       }
       handleSubmit = (e) => {
         if (e.preventDefault) e.preventDefault();
@@ -51,7 +50,6 @@ export function withForm(formData) {
     }
 
     HOC.childContextTypes = {
-      formName: PropTypes.string,
       form: PropTypes.object,
       onChange: PropTypes.func,
     };
