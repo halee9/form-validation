@@ -1,56 +1,103 @@
+import _ from 'lodash';
+
+const validateField = (value, validates) => {
+  if (_.isArray(validates)){
+    for (let i=0; i<validates.length; i++){
+      const error = validates[i](value);
+      if (error) return error;
+    }
+    return false;
+  }
+  return false;
+}
+
+const getCountOfValidFields = (obj) => {
+  if (!obj) return false;
+  return Object.keys(obj).filter(field => (obj[field])).length;
+}
+
+const isValidForm = (form, setErrors=false) => {
+  const { fieldValidates, values } = form;
+  const errors = _.reduce(fieldValidates, (acc, validates, key) => {
+    const value = values[key];
+    let error = validateField(value, validates)
+    if (error) acc[key] = error;
+    return acc;
+  }, {});
+
+  if (getCountOfValidFields(errors)) {
+    if (setErrors)
+      return { ...form, valid: false, errors };
+    else 
+      return { ...form, valid: false };
+  }
+  return { ...form, valid: true };
+}
+
+const initailizeForm = (formName) => {
+  return {
+    name: formName, 
+    pristine: true, 
+    formValidate: null, 
+    remoteValidate: null, 
+    fieldValidates: {},
+    errors: {}, 
+    values: {},
+    validForm: true,
+  }
+}
 
 export default function formReducer(state={}, action){
   const { type, payload } = action;
   if (type === 'onchange'){
-    const { formName, fieldName, value, validates, touched } = payload;
+    const { formName, fieldName, value, blured } = payload;
     const form = state[formName];
-    // console.log("state: ", form);
+    const error = validateField(value, form.fieldValidates[fieldName]);
     const values = { ...form.values, [fieldName]: value };
-    const touches = { ...form.touched, [fieldName]: true };
-
-    if (!touched){
+    const touched = { ...form.touched, [fieldName]: true };
+    if (!error) {
+      delete form.errors[fieldName];
+    }
+    const errors = error ? { ...form.errors, [fieldName]: error } : { ...form.errors };
+    if (!blured){
       return { ...state, [formName]: { ...form, pristine: false, values, touched } };
     }
-
-    let errors = {};
-    if (validates){
-      let err = '';
-      for (let i=0; i<validates.length; i++){
-        err = validates[i](value);
-        if (typeof err !== 'undefined' && err !== ''){
-          break; 
-        }
-      }
-      errors = { ...form.errors, [fieldName]: err };
-    }
-    else if (form.formValidate){
-      const errs = form.formValidate({ [fieldName]: value });
-      errors = { ...form.errors, [fieldName]: errs[fieldName]};
-    }
-    return { ...state, [formName]: { ...form, pristine: false, values, touched: touches, errors } };
+    return { ...state, [formName]: { ...form, pristine: false, values, touched, errors } };
   }
   else if (type === 'onsubmit'){
     const { formName } = payload;
     const form = state[formName];
-    let errorCount = Object.keys(form.errors).filter(field => (form.errors[field])).length;
-    if (errorCount > 0){
-      return state;
-    }
-    let errors = {};
-    if (form.formValidate){
-      errors = form.formValidate(form.values);
-      errorCount = Object.keys(errors).filter(field => (errors[field])).length;
-      if (errorCount > 0){
-        return { ...state, [formName]: { ...form, pristine: false, errors } };
-      }
-    }
-    // alert(form.values);
-    return state;
+    return { ...state, [formName]: isValidForm(form, true), pristine: false };
   }
   else if (type === 'onload'){
     const { formName, validate, remoteValidate } = payload;
-    return { ...state, [formName]: 
-      { name: formName, pristine: true, formValidate: validate, remoteValidate: remoteValidate, errors: {}, values: {} }};
+    console.log("on Load......")
+    let form = {};
+    if (!state[formName]) {
+      form = initailizeForm(formName);
+    }
+    else {
+      form = { ...state[formName]};
+    }
+    const validForm = (_.size(form.fieldValidates) > 0 || validate) ? false : true;
+    console.log(form.fieldValidates);
+    return { ...state, 
+      [formName]: { ...form, pristine: true, formValidate: validate, remoteValidate, validForm }};
+  }
+  else if (type === 'onloadField'){
+    console.log("on Load fieled ......", payload)
+    const { formName, fieldName, validates } = payload;
+    let form = {};
+    if (!state[formName]) {
+      form = initailizeForm(formName);
+    }
+    else {
+      form = { ...state[formName]};
+    }
+    const fieldValidates = (validates) ? 
+      { ...form.fieldValidates, [fieldName]: validates } : { ...form.fieldValidates };
+
+    return { ...state, [formName]: isValidForm({ ...form, fieldValidates })};
   }
   else return state;
 }

@@ -13,7 +13,7 @@ import {
 
 class FormValidateFieldLevel extends Component {
   render() {
-    const { handleSubmit, pristine } = this.props;
+    const { handleSubmit, pristine, validForm } = this.props;
     console.log(this.props);
     return (
       <div>
@@ -30,6 +30,7 @@ class FormValidateFieldLevel extends Component {
           />
             
           <button type="submit">Submit</button>
+          { validForm ? "true" : "false" }
         </form> 
             
       </div>

@@ -15,6 +15,10 @@ const onLoad = data => {
   return { type: "onload", payload: data }
 };
 
+const onLoadField = data => {
+  return { type: "onloadField", payload: data }
+};
+
 export function withForm(formData) {
   const { formName, validate, remoteValidate } = formData;
   
@@ -24,11 +28,12 @@ export function withForm(formData) {
       onSubmit: value => dispatch(onSubmit(value)),
       onChange: value => dispatch(onChange(value)),
       onLoad: value => dispatch(onLoad(value)),
+      onLoadField: value => dispatch(onLoadField(value)),
     })
   
     class HOC extends Component {
       getChildContext() {
-        return { form: this.props.form, onChange: this.props.onChange };
+        return { formName, form: this.props.form, onChange: this.props.onChange, onLoadField: this.props.onLoadField };
       }
       handleSubmit = (e) => {
         if (e.preventDefault) e.preventDefault();
@@ -44,14 +49,17 @@ export function withForm(formData) {
           validate={validate} 
           handleSubmit={this.handleSubmit}
           pristine={this.props.form && this.props.form.pristine}
+          validForm={this.props.form && this.props.form.validForm}
           {...this.props} 
         />;
       }
     }
 
     HOC.childContextTypes = {
+      formName: PropTypes.string,
       form: PropTypes.object,
       onChange: PropTypes.func,
+      onLoadField: PropTypes.func,
     };
 
     return connect(

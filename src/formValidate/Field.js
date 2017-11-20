@@ -1,19 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import './Field.css';
 
 export class Field extends Component {
-  touched = false;
+  blured = false;
   change = (value) => {
-    const { name, validates } = this.props;
+    const { name } = this.props;
     this.context.onChange({ 
-      formName: this.context.form.name,
+      formName: this.context.formName,
       fieldName: name,
       value: value, 
-      validates: validates,
-      touched: this.touched
+      blured: this.blured
     });
     
   }
+
+  componentDidMount(){
+    const { name, validates } = this.props;
+    const { formName, onLoadField } = this.context;
+    // console.log("field mounted: ", formName)
+    onLoadField({ formName: formName, fieldName: name, validates });
+  }
+
   render() {
     const { name, type, label } = this.props;
     const { form } = this.context;
@@ -27,20 +35,22 @@ export class Field extends Component {
                 this.change(e.target.value);
               }}
               onBlur={(e) => {
-                this.touched = true;
+                this.blured = true;
                 this.change(e.target.value);
               }}
               {...this.props}
             />
-          <div>{form && form.errors && form.errors[name]}</div>
+          <div className='error-message'>{form && form.errors && form.errors[name]}</div>
       </div>
     )
   }
 }
 
 Field.contextTypes = {
+  formName: PropTypes.string,
   form: PropTypes.object,
   onChange: PropTypes.func,
+  onLoadField: PropTypes.func,
 };
 
 Field.defaultProps = {
@@ -52,4 +62,3 @@ Field.propTypes = {
   type: PropTypes.string,
   label: PropTypes.string,
 };
-
