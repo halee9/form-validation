@@ -17,20 +17,29 @@ class FormValidateFieldLevel extends Component {
     console.log(this.props);
     return (
       <div>
+        <h3>Form Validation Test</h3>
+        <hr />
         <form onSubmit={handleSubmit}>
-          <Field
-            name= 'username'
-            validates= {[required, minLength(2), maxLength(10)]}
-            placeholder='User Name'
-          />
-          <Field
-            name= 'email'
-            validates= {[email]}
-            placeholder='Email'
-          />
-            
-          <button type="submit">Submit</button>
-          { validForm ? "true" : "false" }
+          <div className="form-group">
+            <label>User Name: </label>
+            <Field
+              name= 'username'
+              validates= {[required, minLength(2), maxLength(10)]}
+              placeholder='User Name'
+              className='form-control'
+            />
+          </div>
+          <div className="form-group">
+            <label>Email: </label>
+            <Field
+              name= 'email'
+              validates= {[email]}
+              placeholder='Email'
+              className='form-control'
+            />
+          </div>
+          <button type="submit" className="btn btn-default" disabled={!validForm}>Submit</button>
+          <br />{ validForm ? "true" : "false" }
         </form> 
             
       </div>
