@@ -11,28 +11,16 @@ const validateField = (value, validates) => {
   return false;
 }
 
-const getCountOfValidFields = (obj) => {
-  if (!obj) return false;
-  return Object.keys(obj).filter(field => (obj[field])).length;
-}
-
-const isValidForm = (form, setErrors=false) => {
-  const { fieldValidates, values } = form;
-  const errors = _.reduce(fieldValidates, (acc, validates, key) => {
+const validateForm = (values, fieldValidates) => {
+  return _.reduce(fieldValidates, (acc, validates, key) => {
     const value = values[key];
     let error = validateField(value, validates)
     if (error) acc[key] = error;
     return acc;
   }, {});
-
-  if (getCountOfValidFields(errors)) {
-    if (setErrors)
-      return { ...form, valid: false, errors };
-    else 
-      return { ...form, valid: false };
-  }
-  return { ...form, valid: true };
 }
+
+const isValidform = errors => _.size(errors) > 0 ? false : true;
 
 const initailizeForm = (formName) => {
   return {
@@ -60,14 +48,14 @@ export default function formReducer(state={}, action){
     }
     const errors = error ? { ...form.errors, [fieldName]: error } : { ...form.errors };
     if (!blured){
-      return { ...state, [formName]: { ...form, pristine: false, values, touched } };
+      return { ...state, [formName]: { ...form, pristine: false, values, touched, validForm: isValidform(errors) } };
     }
-    return { ...state, [formName]: { ...form, pristine: false, values, touched, errors } };
+    return { ...state, [formName]: { ...form, pristine: false, values, touched, errors, validForm: isValidform(errors) } };
   }
   else if (type === 'onsubmit'){
     const { formName } = payload;
     const form = state[formName];
-    return { ...state, [formName]: isValidForm(form, true), pristine: false };
+    return { ...state, [formName]: { ...form, errors: validateForm(form.values, form.fieldValidates) }, pristine: false };
   }
   else if (type === 'onload'){
     const { formName, validate, remoteValidate } = payload;
@@ -80,7 +68,6 @@ export default function formReducer(state={}, action){
       form = { ...state[formName]};
     }
     const validForm = (_.size(form.fieldValidates) > 0 || validate) ? false : true;
-    console.log(form.fieldValidates);
     return { ...state, 
       [formName]: { ...form, pristine: true, formValidate: validate, remoteValidate, validForm }};
   }
@@ -96,8 +83,7 @@ export default function formReducer(state={}, action){
     }
     const fieldValidates = (validates) ? 
       { ...form.fieldValidates, [fieldName]: validates } : { ...form.fieldValidates };
-
-    return { ...state, [formName]: isValidForm({ ...form, fieldValidates })};
+    return { ...state, [formName]: { ...form, fieldValidates }};
   }
   else return state;
 }
