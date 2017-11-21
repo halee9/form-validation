@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import FormValidateFormLevel from './FormValidateFormLevel'
-import FormValidateFieldLevel from './FormValidateFieldLevel'
+// import FormValidateFieldLevel from './FormValidateFieldLevel'
+import MenuForm from './components/MenuForm';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux'
 import reducers from './reducers';
@@ -12,7 +12,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div>
-          <FormValidateFieldLevel />
+          <MenuForm />
         </div>
       </Provider>
     );

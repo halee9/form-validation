@@ -22,25 +22,55 @@ export class Field extends Component {
     onLoadField({ formName: formName, fieldName: name, validates });
   }
 
-  render() {
-    const { name, type, label } = this.props;
+  renderInput = () => {
+    const { name, type } = this.props;
     const { form } = this.context;
     return (
+      <input 
+        type={type} 
+        name={name}
+        value={form && form.values && form.values[name] || ''}
+        onChange={(e) => {
+          this.change(e.target.value);
+        }}
+        onBlur={(e) => {
+          this.blured = true;
+          this.change(e.target.value);
+        }}
+        {...this.props}
+      />
+    );
+  }
+
+  renderSelect = () => {
+    const { className, children, name } = this.props;
+    const { form } = this.context;
+    return (
+      <select 
+        className={className}
+        name={name}
+        value={form && form.values && form.values[name] || ''}
+        onChange={(e) => {
+          this.change(e.target.value);
+        }}
+        onBlur={(e) => {
+          this.blured = true;
+          this.change(e.target.value);
+        }}
+      >
+        { children }
+      </select>
+    )
+  }
+
+  render() {
+    const { name, type, component } = this.props;
+    const { form } = this.context;
+    const input = component === 'select' ? this.renderSelect() : this.renderInput();
+    return (
       <div>
-          <input 
-              type={type} 
-              name={name}
-              value={form && form.values && form.values[name] || ''}
-              onChange={(e) => {
-                this.change(e.target.value);
-              }}
-              onBlur={(e) => {
-                this.blured = true;
-                this.change(e.target.value);
-              }}
-              {...this.props}
-            />
-          <div className='error-message'>{form && form.errors && form.errors[name]}</div>
+        { input }  
+        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
       </div>
     )
   }

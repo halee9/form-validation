@@ -1,5 +1,7 @@
 import _ from 'lodash';
 
+const PRISTINE = 'pristine';
+
 const validateField = (value, validates) => {
   if (_.isArray(validates)){
     for (let i=0; i<validates.length; i++){
@@ -25,13 +27,14 @@ const isValidform = errors => _.size(errors) > 0 ? false : true;
 const initailizeForm = (formName) => {
   return {
     name: formName, 
-    pristine: true, 
+    pristine: {}, 
     formValidate: null, 
     remoteValidate: null, 
     fieldValidates: {},
     errors: {}, 
     values: {},
     validForm: true,
+    valids: {},
   }
 }
 
@@ -69,11 +72,11 @@ export default function formReducer(state={}, action){
     }
     const validForm = (_.size(form.fieldValidates) > 0 || validate) ? false : true;
     return { ...state, 
-      [formName]: { ...form, pristine: true, formValidate: validate, remoteValidate, validForm }};
+      [formName]: { ...form, formValidate: validate, remoteValidate, validForm }};
   }
   else if (type === 'onloadField'){
     console.log("on Load fieled ......", payload)
-    const { formName, fieldName, validates } = payload;
+    const { formName, fieldName, validates, initValue='' } = payload;
     let form = {};
     if (!state[formName]) {
       form = initailizeForm(formName);
@@ -83,7 +86,11 @@ export default function formReducer(state={}, action){
     }
     const fieldValidates = (validates) ? 
       { ...form.fieldValidates, [fieldName]: validates } : { ...form.fieldValidates };
-    return { ...state, [formName]: { ...form, fieldValidates }};
+    const valids = (validates) ? 
+      { ...form.valids, [fieldName]: false } : { ...form.valids, [fieldName]: true };
+    const values = { ...form.values, [fieldName]: initValue };
+    const pristine = { ...form.pristine, [fieldName]: true };
+      return { ...state, [formName]: { ...form, fieldValidates, values, pristine, valids }};
   }
   else return state;
 }
