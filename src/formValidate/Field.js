@@ -23,56 +23,103 @@ export class Field extends Component {
   }
 
   renderInput = () => {
-    const { name, type } = this.props;
+    const { name } = this.props;
     const { form } = this.context;
     return (
-      <input 
-        type={type} 
-        name={name}
-        value={form && form.values && form.values[name] || ''}
-        onChange={(e) => {
-          this.change(e.target.value);
-        }}
-        onBlur={(e) => {
-          this.blured = true;
-          this.change(e.target.value);
-        }}
-        {...this.props}
-      />
+      <div>
+        <input 
+          value={form ? form.values && form.values[name] : ''}
+          onChange={(e) => {
+            this.change(e.target.value);
+          }}
+          onBlur={(e) => {
+            this.blured = true;
+            this.change(e.target.value);
+          }}
+          {...this.props}
+        />
+        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
+      </div>
     );
   }
 
   renderSelect = () => {
-    const { className, children, name } = this.props;
+    const { children, name } = this.props;
     const { form } = this.context;
     return (
-      <select 
-        className={className}
-        name={name}
-        value={form && form.values && form.values[name] || ''}
+      <div>
+        <select 
+          value={form ? form.values && form.values[name] : ''}
+          onChange={(e) => {
+            this.blured = true;
+            this.change(e.target.value);
+          }}
+          {...this.props}
+        >
+          { children }
+        </select>
+        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
+      </div>
+    )
+  }
+
+  renderTextarea = () => {
+    const { children, name } = this.props;
+    const { form } = this.context;
+    return (
+      <div>
+        <textarea 
+          value={form ? form.values && form.values[name] : ''}
+          onChange={(e) => {
+            this.blured = true;
+            this.change(e.target.value);
+          }}
+          {...this.props}
+        >
+          { children }
+        </textarea>
+        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
+      </div>
+    )
+  }
+
+  renderRadio = () => {
+    const { name } = this.props;
+    const { form } = this.context;
+    return (
+      <input 
+        value={form ? form.values && form.values[name] : ''}
         onChange={(e) => {
           this.change(e.target.value);
         }}
-        onBlur={(e) => {
-          this.blured = true;
+        {...this.props}
+      />
+    )
+  }
+
+  renderCheckbox = () => {
+    const { name } = this.props;
+    const { form } = this.context;
+    return (
+      <input 
+        value={form ? form.values && form.values[name] : ''}
+        onChange={(e) => {
           this.change(e.target.value);
         }}
-      >
-        { children }
-      </select>
+        {...this.props}
+      />
     )
   }
 
   render() {
-    const { name, type, component } = this.props;
-    const { form } = this.context;
-    const input = component === 'select' ? this.renderSelect() : this.renderInput();
-    return (
-      <div>
-        { input }  
-        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
-      </div>
-    )
+    const { component } = this.props;
+    const input = 
+      component === 'input' ? this.renderInput() :
+      component === 'select' ? this.renderSelect() : 
+      component === 'textarea' ? this.renderTextarea() : 
+      component === 'radio' ? this.renderRadio() : 
+      component === 'checkbox' ? this.renderCheckbox() : this.renderInput();
+    return input;
   }
 }
 
@@ -85,6 +132,7 @@ Field.contextTypes = {
 
 Field.defaultProps = {
   type: 'text',
+  component: 'input',
 };
 
 Field.propTypes = {

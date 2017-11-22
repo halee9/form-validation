@@ -9,11 +9,11 @@ export const minValue = min => value =>
   value && value < min ? `Must be at least ${min}` : '';
 export const maxValue = max => value =>
   value && value > max ? `Must be at most ${max}` : '';
-const emailForm = value =>
+export const emailForm = value =>
   value && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)
     ? 'Invalid email address'
     : '';
-const alphaNumeric = value =>
+export const alphaNumeric = value =>
   value && /[^a-zA-Z0-9 ]/i.test(value)
     ? 'Only alphanumeric characters'
     : '';

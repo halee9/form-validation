@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { onChange, onSubmit } from '../actions/formAction';
 
 const onSubmit = form => {
   return { type: "onsubmit", payload: form }
@@ -50,6 +49,7 @@ export function withForm(formData) {
           handleSubmit={this.handleSubmit}
           pristine={this.props.form && this.props.form.pristine}
           validForm={this.props.form && this.props.form.validForm}
+          errors={this.props.form && this.props.form.errors}
           {...this.props} 
         />;
       }
