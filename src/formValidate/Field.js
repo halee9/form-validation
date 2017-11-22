@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Field.css';
@@ -5,7 +6,8 @@ import './Field.css';
 export class Field extends Component {
   blured = false;
   change = (value) => {
-    const { name } = this.props;
+    const { name, component } = this.props;
+    if (component !== 'input' && (component !== 'textarea')) this.blured = true;
     this.context.onChange({ 
       formName: this.context.formName,
       fieldName: name,
@@ -101,10 +103,26 @@ export class Field extends Component {
 
   handleChangeCheckbox = (e) => {
     const { value, checked } = e.target;
-    let array = this.context.form.values[this.props.name] || [];
+    const array = [ ...this.context.form.values[this.props.name]] || [];
+    console.log(array);
     if (checked) array.push(value);
     else array.splice(array.indexOf(value), 1);
+    console.log(array);
     this.change(array);
+  }
+
+  renderCheckboxes = () => {
+    const { name, children } = this.props;
+    const { form } = this.context;
+    return (
+      <div 
+        onChange={this.handleChangeCheckbox}
+        {...this.props}
+      >
+        <div>{ children }</div>
+        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
+      </div>
+    )
   }
 
   renderCheckbox = () => {
@@ -112,7 +130,12 @@ export class Field extends Component {
     const { form } = this.context;
     return (
       <div 
-        onChange={this.handleChangeCheckbox}
+        onChange={(e) => {
+          const { value, checked } = e.target;
+          let newValue = '';
+          if (checked) newValue = value;
+          this.change(newValue);
+        }}
         {...this.props}
       >
         <div>{ children }</div>
@@ -128,7 +151,7 @@ export class Field extends Component {
       component === 'select' ? this.renderSelect() : 
       component === 'textarea' ? this.renderTextarea() : 
       component === 'radio' ? this.renderRadio() : 
-      component === 'checkbox' ? this.renderCheckbox() : this.renderInput();
+      component === 'checkboxes' ? this.renderCheckboxes() : this.renderInput();
     return input;
   }
 }

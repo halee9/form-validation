@@ -83,7 +83,6 @@ class MenuForm extends Component {
                 <input type='radio' name='cookingType' value='others' />{' '}Others
               </label>
             </Field>
-            <div>{errors && errors.cookingType}</div>
           </div>
 
           <div>
@@ -92,7 +91,7 @@ class MenuForm extends Component {
               className="checkbox"
               name= 'ingredients'
               type='checkbox'
-              component='checkbox'
+              component='checkboxes'
               validates= {[required]}
             >
               <label className="radio-inline">
@@ -105,7 +104,7 @@ class MenuForm extends Component {
                 <input type='checkbox' name='ingredients' value='cabbages' />{' '}Cabbages
               </label>
               <label className="checkbox-inline">
-                <input type='checkbox' name='ingredients' value='onoins' />{' '}Onions
+                <input type='checkbox' name='ingredients' value='oniins' />{' '}Onions
               </label>
               <label className="checkbox-inline">
                 <input type='checkbox' name='ingredients' value='carrots' />{' '}Carrots
@@ -117,7 +116,6 @@ class MenuForm extends Component {
                 <input type='checkbox' name='ingredients' value='greenOnions' />{' '}Green Onions
               </label>
             </Field>
-            <div>{errors && errors.ingredients}</div>
           </div>
             
         <button type="submit" className="btn btn-primary" disabled={!validForm}>Submit</button>

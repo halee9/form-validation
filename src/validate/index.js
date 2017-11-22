@@ -1,4 +1,14 @@
-export const required = value => (value ? '' : 'Required');
+import _ from 'lodash';
+
+// export const required = value => (value ? '' : 'Required');
+export const required = value => {
+  console.log(value)
+  if (_.isArray(value)){
+    console.log(value.length)
+    return value.length < 1 ? 'Required' : '';
+  }
+  return (value ? '' : 'Required');
+}
 export const maxLength = max => value =>
   value && value.length > max ? `Must be ${max} characters or less` : '';
 export const minLength = min => value =>
