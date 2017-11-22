@@ -118,7 +118,9 @@ class MenuForm extends Component {
             </Field>
           </div>
             
-        <button type="submit" className="btn btn-primary" disabled={!validForm}>Submit</button>
+        <button type="submit" className="btn btn-primary" disabled={!validForm}>Submit(disable)</button>
+        {' '}
+        <button type="submit" className="btn btn-primary" >Submit</button>
         <br /><br />
         <div><pre>{JSON.stringify(this.props, null, 2) }</pre></div>
         </form> 
