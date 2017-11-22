@@ -84,30 +84,40 @@ export class Field extends Component {
   }
 
   renderRadio = () => {
-    const { name } = this.props;
+    const { name, children } = this.props;
     const { form } = this.context;
     return (
-      <input 
-        value={form ? form.values && form.values[name] : ''}
+      <div 
         onChange={(e) => {
           this.change(e.target.value);
         }}
         {...this.props}
-      />
+      >
+        <div>{ children }</div>
+        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
+      </div>
     )
   }
 
+  handleChangeCheckbox = (e) => {
+    const { value, checked } = e.target;
+    let array = this.context.form.values[this.props.name] || [];
+    if (checked) array.push(value);
+    else array.splice(array.indexOf(value), 1);
+    this.change(array);
+  }
+
   renderCheckbox = () => {
-    const { name } = this.props;
+    const { name, children } = this.props;
     const { form } = this.context;
     return (
-      <input 
-        value={form ? form.values && form.values[name] : ''}
-        onChange={(e) => {
-          this.change(e.target.value);
-        }}
+      <div 
+        onChange={this.handleChangeCheckbox}
         {...this.props}
-      />
+      >
+        <div>{ children }</div>
+        <div className='error-message'>{form && form.errors && form.errors[name]}</div>
+      </div>
     )
   }
 

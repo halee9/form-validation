@@ -33,8 +33,7 @@ class MenuForm extends Component {
             <label>Description: </label>
             <Field
               name= 'description'
-              validates= {[required, minLength(5), maxLength(20)]}
-              placeholder='Description of menu'
+              placeholder='Description of menu (optional)'
               className='form-control'
               component='textarea'
               rows='4'
@@ -61,32 +60,66 @@ class MenuForm extends Component {
               { categories.map( c => <option key={c} value={c}>{c}</option>)}
             </Field>
           </div>
+
           <div>
-            <label>Sex: </label>
-            <div className="radio">
+            <label>Type of Cooking: </label>
+            <Field 
+              className="radio"
+              name= 'cookingType'
+              type='radio'
+              component='radio'
+              validates= {[required]}
+            >
               <label className="radio-inline">
-                <Field
-                  name= 'sex'
-                  type='radio'
-                  component='radio'
-                  validates= {[required]}
-                  value='male'
-                />{' '}
-                Male
+                <input type='radio' name='cookingType' value='grill' />{' '}Grill
               </label>
               <label className="radio-inline">
-                <Field
-                  name= 'sex'
-                  type='radio'
-                  component='radio'
-                  validates= {[required]}
-                  value='female'
-                />{' '}
-                Female
+                <input type='radio' name='cookingType' value='wok' />{' '}Wok
               </label>
-            </div>
-            <div>{errors && errors.sex}</div>
+              <label className="radio-inline">
+                <input type='radio' name='cookingType' value='deepFry' />{' '}Deep-fry
+              </label>
+              <label className="radio-inline">
+                <input type='radio' name='cookingType' value='others' />{' '}Others
+              </label>
+            </Field>
+            <div>{errors && errors.cookingType}</div>
           </div>
+
+          <div>
+            <label>Ingredients: </label>
+            <Field 
+              className="checkbox"
+              name= 'ingredients'
+              type='checkbox'
+              component='checkbox'
+              validates= {[required]}
+            >
+              <label className="radio-inline">
+                <input type='checkbox' name='ingredients' value='broccoli' />{' '}Brocolli
+              </label>
+              <label className="checkbox-inline">
+                <input type='checkbox' name='ingredients' value='mushrooms' />{' '}Mushrooms
+              </label>
+              <label className="checkbox-inline">
+                <input type='checkbox' name='ingredients' value='cabbages' />{' '}Cabbages
+              </label>
+              <label className="checkbox-inline">
+                <input type='checkbox' name='ingredients' value='onoins' />{' '}Onions
+              </label>
+              <label className="checkbox-inline">
+                <input type='checkbox' name='ingredients' value='carrots' />{' '}Carrots
+              </label>
+              <label className="checkbox-inline">
+                <input type='checkbox' name='ingredients' value='beanSprount' />{' '}Bean Sprout
+              </label>
+              <label className="checkbox-inline">
+                <input type='checkbox' name='ingredients' value='greenOnions' />{' '}Green Onions
+              </label>
+            </Field>
+            <div>{errors && errors.ingredients}</div>
+          </div>
+            
         <button type="submit" className="btn btn-primary" disabled={!validForm}>Submit</button>
         <br /><br />
         <div><pre>{JSON.stringify(this.props, null, 2) }</pre></div>
