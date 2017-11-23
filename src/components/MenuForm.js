@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import _ from 'lodash';
 
 import { 
   withForm, 
@@ -10,6 +11,8 @@ import {
 } from '../validate';
 
 const categories = [ "Teriyaki", "Deep Fry", "Stir Fry", "Side" ];
+const cookingTypes = [ "Grill", "Wok", "Deep-fry", "others"];
+const ingredients = [ "Broccoli", "Mushrooms", "Cabbages", "Onions", "Green Onions", "Carrots", "Bean Sprout" ];
 
 class MenuForm extends Component {
   render() {
@@ -57,7 +60,9 @@ class MenuForm extends Component {
               className='form-control'
             >
               <option />
-              { categories.map( c => <option key={c} value={c}>{c}</option>)}
+              { categories.map( value => (
+                <option key={value} value={_.camelCase(value)}>{value}</option>
+              ))}
             </Field>
           </div>
 
@@ -70,18 +75,13 @@ class MenuForm extends Component {
               component='radio'
               validates= {[required]}
             >
-              <label className="radio-inline">
-                <input type='radio' name='cookingType' value='grill' />{' '}Grill
-              </label>
-              <label className="radio-inline">
-                <input type='radio' name='cookingType' value='wok' />{' '}Wok
-              </label>
-              <label className="radio-inline">
-                <input type='radio' name='cookingType' value='deepFry' />{' '}Deep-fry
-              </label>
-              <label className="radio-inline">
-                <input type='radio' name='cookingType' value='others' />{' '}Others
-              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+              { cookingTypes.map( value => (
+                <label className="radio-inline" key={value}>
+                  <input type='radio' name='cookingType' value={_.camelCase(value)} />{' '}{value}
+                </label>
+              ))}
+              </div>
             </Field>
           </div>
 
@@ -94,27 +94,11 @@ class MenuForm extends Component {
               component='checkboxes'
               validates= {[required]}
             >
-              <label className="radio-inline">
-                <input type='checkbox' name='ingredients' value='broccoli' />{' '}Brocolli
-              </label>
-              <label className="checkbox-inline">
-                <input type='checkbox' name='ingredients' value='mushrooms' />{' '}Mushrooms
-              </label>
-              <label className="checkbox-inline">
-                <input type='checkbox' name='ingredients' value='cabbages' />{' '}Cabbages
-              </label>
-              <label className="checkbox-inline">
-                <input type='checkbox' name='ingredients' value='oniins' />{' '}Onions
-              </label>
-              <label className="checkbox-inline">
-                <input type='checkbox' name='ingredients' value='carrots' />{' '}Carrots
-              </label>
-              <label className="checkbox-inline">
-                <input type='checkbox' name='ingredients' value='beanSprount' />{' '}Bean Sprout
-              </label>
-              <label className="checkbox-inline">
-                <input type='checkbox' name='ingredients' value='greenOnions' />{' '}Green Onions
-              </label>
+              { ingredients.map( value => (
+                <label className="radio-inline" key={value}>
+                  <input type='checkbox' name='ingredients' value={_.camelCase(value)} />{' '}{value}
+                </label>
+              ))}
             </Field>
           </div>
             

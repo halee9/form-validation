@@ -79,7 +79,7 @@ export default function formReducer(state={}, action){
   }
   else if (type === 'onloadField'){
     // console.log("on Load fieled ......", payload)
-    const { formName, fieldName, validates, initValue='' } = payload;
+    const { formName, fieldName, validates, initValue=undefined } = payload;
     let form = {};
     if (!state[formName]) {
       form = initailizeForm(formName);

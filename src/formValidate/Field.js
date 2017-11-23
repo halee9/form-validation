@@ -30,7 +30,7 @@ export class Field extends Component {
     return (
       <div>
         <input 
-          value={form ? form.values && form.values[name] : ''}
+          value={form ? form.values ? form.values[name] || '' : '' : ''}
           onChange={(e) => {
             this.change(e.target.value);
           }}
@@ -103,11 +103,11 @@ export class Field extends Component {
 
   handleChangeCheckbox = (e) => {
     const { value, checked } = e.target;
-    const array = [ ...this.context.form.values[this.props.name]] || [];
-    console.log(array);
+    let array = this.context.form.values[this.props.name] || [];
+    // console.log(array);
     if (checked) array.push(value);
     else array.splice(array.indexOf(value), 1);
-    console.log(array);
+    if (array.length < 1) array = undefined;
     this.change(array);
   }
 
