@@ -39,13 +39,15 @@ const initailizeForm = (formName) => {
   }
 }
 
-export default function formReducer(state={}, action){
+export function formReducer(state={}, action){
   const { type, payload } = action;
   if (type === 'onchange'){
     const { formName, fieldName, value, blured } = payload;
     const form = state[formName];
     const error = validateField(value, form.fieldValidates[fieldName]);
-    
+    if (!value) {
+      delete form.values[fieldName];
+    }
     const values = value ? { ...form.values, [fieldName]: value } : { ...form.values };
     const touched = { ...form.touched, [fieldName]: true };
     const valids = { ...form.valids, [fieldName]: false };

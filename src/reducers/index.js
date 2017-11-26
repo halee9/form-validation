@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import formReducer from './formReducer'
+import { formReducer } from '../formValidate'
 
 const rootReducer = combineReducers({
   forms: formReducer,

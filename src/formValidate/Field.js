@@ -8,6 +8,8 @@ export class Field extends Component {
   change = (value) => {
     const { name, component, type } = this.props;
     if (component !== 'input' && (component !== 'textarea')) this.blured = true;
+    // const newValue = type !== 'number' ? value :
+    //   value === '' ? value : Number(value);
     const newValue = type === 'number' ? Number(value) : value;
     this.context.onChange({ 
       formName: this.context.formName,
