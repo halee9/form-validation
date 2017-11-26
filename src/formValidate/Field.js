@@ -6,12 +6,13 @@ import './Field.css';
 export class Field extends Component {
   blured = false;
   change = (value) => {
-    const { name, component } = this.props;
+    const { name, component, type } = this.props;
     if (component !== 'input' && (component !== 'textarea')) this.blured = true;
+    const newValue = type === 'number' ? Number(value) : value;
     this.context.onChange({ 
       formName: this.context.formName,
       fieldName: name,
-      value: value, 
+      value: newValue, 
       blured: this.blured
     });
     

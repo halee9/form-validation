@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 
 import { 
   withForm, 
@@ -10,11 +11,31 @@ import {
   required, minLength, maxLength, number
 } from '../validate';
 
+import { addMenu } from '../actions/menu';
+
 const categories = [ "Teriyaki", "Deep Fry", "Stir Fry", "Side" ];
-const cookingTypes = [ "Grill", "Wok", "Deep-fry", "others"];
+const cookingTypes = [ "Grill", "Wok", "Deep-fry", "Others"];
 const ingredients = [ "Broccoli", "Mushrooms", "Cabbages", "Onions", "Green Onions", "Carrots", "Bean Sprout" ];
 
 class MenuForm extends Component {
+  handleSubmit = e => {
+    if (e) e.preventDefault();
+    const { handleSubmit, values, addMenu, validForm } = this.props;
+    if (!validForm) handleSubmit();
+    console.log("value: ", values);
+    if (validForm){
+      const formValues = _.reduce(values, (acc, value, key) => {
+        if (typeof value !== 'undefined' && value !== ''){
+          acc[key] = typeof value === 'string' ? value.trim() : value;
+        }
+        return acc;
+      }, {});
+      console.log("form value: ", formValues);
+      addMenu(formValues);
+    }
+    return;
+  }
+
   render() {
     const { handleSubmit, validForm, errors } = this.props;
     // console.log(this.props);
@@ -22,7 +43,7 @@ class MenuForm extends Component {
       <div>
         <h3>Menu Form</h3>
         <hr />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Name: </label>
             <Field
@@ -46,6 +67,7 @@ class MenuForm extends Component {
             <label>Price: </label>
             <Field
               name= 'price'
+              type='number'
               validates= {[required, number]}
               placeholder='Price of menu'
               className='form-control'
@@ -114,4 +136,11 @@ class MenuForm extends Component {
   }
 }
 
-export default withForm({ formName: "MenuForm" })(MenuForm);
+// const mapStateToProps = ({ auth }) => {
+//   const { email, password, error, loading } = auth;
+//   return { email, password, error, loading };
+// };
+
+const enhanced = connect(null, { addMenu })(MenuForm);
+
+export default withForm({ formName: "MenuForm" })(enhanced);

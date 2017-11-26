@@ -34,8 +34,7 @@ export function withForm(formData) {
       getChildContext() {
         return { formName, form: this.props.form, onChange: this.props.onChange, onLoadField: this.props.onLoadField };
       }
-      handleSubmit = (e) => {
-        if (e.preventDefault) e.preventDefault();
+      handleSubmit = () => {
         this.props.onSubmit({ formName });
       }
       
@@ -47,9 +46,9 @@ export function withForm(formData) {
           formName={formName} 
           validate={validate} 
           handleSubmit={this.handleSubmit}
-          pristine={this.props.form && this.props.form.pristine}
           validForm={this.props.form && this.props.form.validForm}
           errors={this.props.form && this.props.form.errors}
+          values={this.props.form && this.props.form.values}
           {...this.props} 
         />;
       }

@@ -45,7 +45,8 @@ export default function formReducer(state={}, action){
     const { formName, fieldName, value, blured } = payload;
     const form = state[formName];
     const error = validateField(value, form.fieldValidates[fieldName]);
-    const values = { ...form.values, [fieldName]: value };
+    
+    const values = value ? { ...form.values, [fieldName]: value } : { ...form.values };
     const touched = { ...form.touched, [fieldName]: true };
     const valids = { ...form.valids, [fieldName]: false };
     if (!error) {
@@ -91,7 +92,7 @@ export default function formReducer(state={}, action){
       { ...form.fieldValidates, [fieldName]: validates } : { ...form.fieldValidates };
     const valids = (validates) ? 
       { ...form.valids, [fieldName]: false } : { ...form.valids, [fieldName]: true };
-    const values = { ...form.values, [fieldName]: initValue };
+    const values = initValue ? { ...form.values, [fieldName]: initValue } : { ...form.values };
     const pristine = { ...form.pristine, [fieldName]: true };
       return { ...state, [formName]: { ...form, fieldValidates, values, pristine, valids }};
   }
