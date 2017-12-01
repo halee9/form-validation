@@ -20,20 +20,31 @@ export class Field extends Component {
     
   }
 
+  // componentWillMount(){
+  //   console.log("mount")
+  //   const { name } = this.props;
+  //   const { form } = this.context;
+  //   form.values[name] = this.props.value || '';
+  // }
+
   componentDidMount(){
-    const { name, validates } = this.props;
+    const { name, validates, value } = this.props;
     const { formName, onLoadField } = this.context;
-    // console.log("field mounted: ", formName)
-    onLoadField({ formName: formName, fieldName: name, validates });
+    // console.log("field mounted: ", this.props)
+    onLoadField({ formName: formName, fieldName: name, validates, initValue: value });
   }
 
   renderInput = () => {
+    
     const { name } = this.props;
     const { form } = this.context;
+    if (!form) return <span />
+    // form.values[name] = this.props.value || '';
     return (
       <div>
         <input 
-          value={form ? form.values ? form.values[name] || '' : '' : ''}
+          {...this.props}
+          value={form.values[name] || ''}
           onChange={(e) => {
             this.change(e.target.value);
           }}
@@ -41,7 +52,6 @@ export class Field extends Component {
             this.blured = true;
             this.change(e.target.value);
           }}
-          {...this.props}
         />
         <div className='error-message'>{form && form.errors && form.errors[name]}</div>
       </div>
@@ -51,15 +61,16 @@ export class Field extends Component {
   renderSelect = () => {
     const { children, name } = this.props;
     const { form } = this.context;
+    // console.log("form.values[name]: ", form.values[name])
     return (
       <div>
         <select 
-          value={form ? form.values && form.values[name] : ''}
+          {...this.props}
+          value={form.values[name] || ''}
           onChange={(e) => {
             this.blured = true;
             this.change(e.target.value);
           }}
-          {...this.props}
         >
           { children }
         </select>
@@ -74,14 +85,13 @@ export class Field extends Component {
     return (
       <div>
         <textarea 
-          value={form ? form.values && form.values[name] : ''}
+          {...this.props}
+          value={form.values[name] || ''}
           onChange={(e) => {
             this.blured = true;
             this.change(e.target.value);
-          }}
-          {...this.props}
+          }}         
         >
-          { children }
         </textarea>
         <div className='error-message'>{form && form.errors && form.errors[name]}</div>
       </div>
@@ -148,6 +158,7 @@ export class Field extends Component {
   }
 
   render() {
+    // console.log("render: ", this.props.name)
     const { component } = this.props;
     const input = 
       component === 'input' ? this.renderInput() :

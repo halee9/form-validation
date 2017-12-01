@@ -18,6 +18,10 @@ const onLoadField = data => {
   return { type: "onloadField", payload: data }
 };
 
+const fetchData = (formName, data) => {
+  return { type: "fetchData", payload: {formName, data }}
+};
+
 export function withForm(formData) {
   const { formName, validate, remoteValidate } = formData;
   
@@ -28,6 +32,7 @@ export function withForm(formData) {
       onChange: value => dispatch(onChange(value)),
       onLoad: value => dispatch(onLoad(value)),
       onLoadField: value => dispatch(onLoadField(value)),
+      fetchData: value => dispatch(fetchData(formName, value)),
     })
   
     class HOC extends Component {
@@ -37,8 +42,12 @@ export function withForm(formData) {
       handleSubmit = () => {
         this.props.onSubmit({ formName });
       }
+      handleFetchData = (data) => {
+        console.log("handleFetchData: ", data)
+        this.props.fetchData(data);
+      }
       
-      componentDidMount(){
+      componentWillMount(){
         this.props.onLoad({ formName, validate, remoteValidate });
       }
       render() {
@@ -46,6 +55,7 @@ export function withForm(formData) {
           formName={formName} 
           validate={validate} 
           handleSubmit={this.handleSubmit}
+          handleFetchData={this.handleFetchData}
           validForm={this.props.form && this.props.form.validForm}
           errors={this.props.form && this.props.form.errors}
           values={this.props.form && this.props.form.values}

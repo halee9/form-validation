@@ -11,16 +11,24 @@ import {
   required, minLength, maxLength, number
 } from '../validate';
 
-import { addMenu } from '../actions/menu';
+import { addMenu, fetchMenu, updateMenu, removeMenu } from '../actions/menu';
 
-const categories = [ "Teriyaki", "Deep Fry", "Stir Fry", "Side" ];
-const cookingTypes = [ "Grill", "Wok", "Deep-fry", "Others"];
-const ingredients = [ "Broccoli", "Mushrooms", "Cabbages", "Onions", "Green Onions", "Carrots", "Bean Sprout" ];
+const categoriesArray = [ "Teriyaki", "Deep Fry", "Stir Fry", "Side" ];
+const cookingTypesArray = [ "Grill", "Wok", "Deep-fry", "Others"];
+const ingredientsArray = [ "Broccoli", "Mushrooms", "Cabbages", "Onions", "Green Onions", "Carrots", "Bean Sprout" ];
 
 class MenuForm extends Component {
+  componentDidMount(){
+    const { params } = this.props.match;
+    if (params.id) {
+      this.props.fetchMenu(params.id).then(snapshot => {
+        this.props.handleFetchData({ ...snapshot.val(), id: snapshot.key })
+      })
+    }
+  }
   handleSubmit = e => {
     if (e) e.preventDefault();
-    const { handleSubmit, values, addMenu, validForm } = this.props;
+    const { handleSubmit, values, addMenu, validForm, updateMenu } = this.props;
     if (!validForm) handleSubmit();
     console.log("value: ", values);
     if (validForm){
@@ -30,18 +38,39 @@ class MenuForm extends Component {
         }
         return acc;
       }, {});
-      console.log("form value: ", formValues);
-      addMenu(formValues);
+      if (formValues.id){
+        updateMenu(formValues).then(() => { this.props.history.push("/") });
+      }
+      else {
+        addMenu(formValues).then(() => { this.props.history.push("/") });
+      }
     }
     return;
   }
 
+  handleClickRemove = () => {
+    const { values, removeMenu } = this.props;
+    if (!values.id) return;
+    removeMenu(values.id).then(() => { this.props.history.push("/") });
+  }
+
   render() {
-    const { handleSubmit, validForm, errors } = this.props;
-    // console.log(this.props);
+    const { handleSubmit, validForm, errors, values } = this.props;
+    if (!values) return <div/>;
+    const formTitle = values.id ? "Menu Update" : "New Menu";
+    const buttonText = values.id ? "Update" : "Submit";
+    const deleteButton = values.id ? 
+      <button type="button" className="btn btn-default" onClick={this.handleClickRemove}>Delete</button>
+      : '';
+    // if (this.props.match.params.id){
+    //   if (this.props.menu) this.setInitValue(this.props.menu);
+    //   //TODO: loading icon
+    //   else return <div/>
+    // }
+    console.log("render form: ", this.props)
     return (
       <div>
-        <h3>Menu Form</h3>
+        <h3>{formTitle}</h3>
         <hr />
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
@@ -82,9 +111,17 @@ class MenuForm extends Component {
               className='form-control'
             >
               <option />
-              { categories.map( value => (
-                <option key={value} value={_.camelCase(value)}>{value}</option>
-              ))}
+              { categoriesArray.map( value => {
+                const val = _.camelCase(value);
+                return (
+                  <option 
+                    key={value} 
+                    value={val}
+                  >
+                    {value}
+                  </option>
+                )}
+              )}
             </Field>
           </div>
 
@@ -98,11 +135,20 @@ class MenuForm extends Component {
               validates= {[required]}
             >
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              { cookingTypes.map( value => (
-                <label className="radio-inline" key={value}>
-                  <input type='radio' name='cookingType' value={_.camelCase(value)} />{' '}{value}
-                </label>
-              ))}
+              { cookingTypesArray.map( value => {
+                console.log("this.props.values.cookingType: ", this.props.values.cookingType)
+                return ( 
+                  <label className="radio-inline" key={value}>
+                    <input 
+                      type='radio' 
+                      name='cookingType' 
+                      value={_.camelCase(value)} 
+                      checked={_.camelCase(value) === this.props.values.cookingType}
+                      onChange={() => {}}
+                    />{' '}{value}
+                  </label>
+                )}
+              )}
               </div>
             </Field>
           </div>
@@ -116,17 +162,23 @@ class MenuForm extends Component {
               component='checkboxes'
               validates= {[required]}
             >
-              { ingredients.map( value => (
-                <label className="radio-inline" key={value}>
-                  <input type='checkbox' name='ingredients' value={_.camelCase(value)} />{' '}{value}
-                </label>
-              ))}
+              { ingredientsArray.map( value => {
+                const val = _.camelCase(value);
+                return (
+                  <label className="radio-inline" key={value}>
+                    <input type='checkbox' 
+                      name='ingredients' 
+                      value={val} 
+                      checked={_.includes(this.props.values.ingredients, val)} 
+                      onChange={() => {}}
+                    />{' '}{value}
+                  </label>
+                )}
+              )}
             </Field>
           </div>
-            
-        <button type="submit" className="btn btn-primary" disabled={!validForm}>Submit(disable)</button>
-        {' '}
-        <button type="submit" className="btn btn-primary" >Submit</button>
+        { deleteButton }{' '}
+        <button type="submit" className="btn btn-primary" disabled={!validForm}>{buttonText}</button>
         <br /><br />
         <div><pre>{JSON.stringify(this.props, null, 2) }</pre></div>
         </form> 
@@ -136,11 +188,11 @@ class MenuForm extends Component {
   }
 }
 
-// const mapStateToProps = ({ auth }) => {
-//   const { email, password, error, loading } = auth;
-//   return { email, password, error, loading };
-// };
+const mapStateToProps = ({ menus }, ownProps) => {
+  const menu = menus[ownProps.match.params.id];
+  return { menu };
+};
 
-const enhanced = connect(null, { addMenu })(MenuForm);
+const enhanced = connect(mapStateToProps, { addMenu, fetchMenu, updateMenu, removeMenu })(MenuForm);
 
 export default withForm({ formName: "MenuForm" })(enhanced);
