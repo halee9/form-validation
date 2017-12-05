@@ -38,7 +38,7 @@ class FormLevelSample extends Component {
 
   componentDidMount(){
     const validForm = rules.length > 0 ? false : true;
-    this.setState={ validForm }
+    this.setState({ validForm });
   }
 
   handleSubmit = e => {
