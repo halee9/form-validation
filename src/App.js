@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 // import FormValidateFieldLevel from './FormValidateFieldLevel'
-import LogIn from './components/LogIn';
+import { LogIn } from './authFirebase';
 import MenuForm from './components/MenuForm';
 import MenuList from './components/MenuList';
 import CategoryForm from './components/CategoryForm';
 import CookingTypeForm from './components/CookingTypeForm';
 import IngredientsForm from './components/IngredientsForm';
+import Sample from './FieldLevelValidation/Sample';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'
@@ -38,6 +39,7 @@ class App extends Component {
             <Route path="/lookups/category" component={CategoryForm}/>
             <Route path="/lookups/cookingType" component={CookingTypeForm}/>
             <Route path="/lookups/ingredients" component={IngredientsForm}/>
+            <Route path="/sample" component={Sample}/>
             </div>
         </Router>
       </Provider>

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { loginUser } from './actions';
 
 import {
   required, minLength, maxLength, number, email
@@ -9,13 +10,24 @@ import {
 import { withForm, Field } from '../formValidate';
 import { withAuth } from '../authFirebase';
 
-class LogIn extends Component {
+class LogInForm extends Component {
+  handleSubmit = (e) => {
+    if (e) e.preventDefault();
+    console.log("Click submit inside")
+    const { values, validForm } = this.props.form;
+    console.log(this.props)
+    const { email, password } = values;
+    
+    if (validForm){
+      this.props.loginUser({ email, password }, () => console.log("login success!!"));
+    }
+  }
   render(){
-    const { validForm, handleSubmit } = this.props;
+    const { validForm } = this.props;
     return (
       <div>
         <h3>Log In</h3>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Email: </label>
             <Field
@@ -47,4 +59,5 @@ class LogIn extends Component {
   }
 }
 
-export default withAuth(withForm({ formName: "LogIn" })(LogIn));
+const withRedux = connect(null,{ loginUser })(LogInForm);
+export const LogIn = withForm({ formName: "LogIn" })(withRedux);
