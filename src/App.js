@@ -7,6 +7,7 @@ import CategoryForm from './components/CategoryForm';
 import CookingTypeForm from './components/CookingTypeForm';
 import IngredientsForm from './components/IngredientsForm';
 import Sample from './FieldLevelValidation/Sample';
+import FormLevelSample from './FormLevelValidation/FormLevelSample';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'
@@ -40,6 +41,7 @@ class App extends Component {
             <Route path="/lookups/cookingType" component={CookingTypeForm}/>
             <Route path="/lookups/ingredients" component={IngredientsForm}/>
             <Route path="/sample" component={Sample}/>
+            <Route path="/formSample" component={FormLevelSample}/>
             </div>
         </Router>
       </Provider>

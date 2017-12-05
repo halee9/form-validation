@@ -15,60 +15,100 @@ const rules = {
   category: [required()],
 }
 
-const validate = (value, rules) => {
+const validate = (value, rules, callback) => {
   if (_.isArray(rules)){
     for (let i=0; i<rules.length; i++){
       const error = rules[i](value);
       if (error) {
-        return error;
+        return callback(error);
       }
     }
-    return false;
+    return callback(false);
   }
-  return false;
+  return callback(false);
 }
 
-class Sample extends Component {
+class FormLevelSample extends Component {
+  onValidate = false;
   state = {
     values: {},
-    errors: {}
+    errors: {},
+    validForm: false
   }
+
+  componentDidMount(){
+    const validForm = rules.length > 0 ? false : true;
+    this.setState={ validForm }
+  }
+
   handleSubmit = e => {
     if (e) e.preventDefault();
     const elements = e.target.elements;
     let errors = {};
     _.map(elements, e => {
       if (e.type && e.type != 'submit'){
-        const error = validate(e.value, rules[e.name]);
-        console.log(e.name, e.value, error)
-        if (error) errors[e.name] = error;
+        validate(e.value, rules[e.name], error => {
+          errors[e.name] = error;
+        })
       }
     })
     this.setState({ errors });
     return;
   }
 
-  handleChange = (name, value, error) => {
-    this.setState({ 
-      values: { ...this.state.values, [name]: value },
-      errors: { ...this.state.errors, [name]: error }
-    })
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.onValidate = true;
+    if (this.onValidate) {
+      validate(value, rules[name], error => {
+        if (error) {
+          this.setState({ 
+            values: { ...this.state.values, [name]: value },
+            errors: { ...this.state.errors, [name]: error }
+          })
+        }
+        else {
+          this.setState({ 
+            values: { ...this.state.values, [name]: value },
+            errors: { ...this.state.errors, [name]: '' }
+          })
+        }
+      });
+    }
+    else {
+      this.setState({ values: { ...this.state.values, [name]: value }});
+    }
+  }
+
+  handleBlur = (e) => {
+    const { name, value } = e.target;
+    validate(value, rules[name], error => {
+      if (error) {
+        this.setState({ 
+          values: { ...this.state.values, [name]: value },
+          errors: { ...this.state.errors, [name]: error }
+        })
+      }
+    });
+    this.onValidate = true;
   }
 
   render() {
     return (
       <div>
-        <h3>Field Level Validation Sample</h3>
+        <h3>Form Level Validation Sample</h3>
         <hr />
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Name: </label>
             <Field
               name= 'name'
-              rules= {[required("Custom required"), minLength(5), maxLength(20)]}
               placeholder='Name of item'
               className='form-control'
               onChange={this.handleChange}
+              onBlur={this.handleBlur}
+              value={this.state.values.name}
+              message={this.state.errors.name}
             />            
           </div>
           <div className="form-group">
@@ -80,6 +120,9 @@ class Sample extends Component {
               component='textarea'
               rows='4'
               onChange={this.handleChange}
+              onBlur={this.handleBlur}
+              value={this.state.values.description}
+              message={this.state.errors.description}
             />            
           </div>
           <div className="form-group">
@@ -87,10 +130,12 @@ class Sample extends Component {
             <Field
               name= 'price'
               type='number'
-              rules= {[required(), number]}
               placeholder='Price of item'
               className='form-control'
               onChange={this.handleChange}
+              onBlur={this.handleBlur}
+              value={this.state.values.price}
+              message={this.state.errors.price}
             />
           </div>
           <div className="form-group">
@@ -100,9 +145,10 @@ class Sample extends Component {
             <Field
               name= 'category'
               component='select'
-              rules= {[required()]}
               className='form-control'
               onChange={this.handleChange}
+              value={this.state.values.category}
+              message={this.state.errors.category}
             >
               <option />
               { _.map(categoriesArray, value => {
@@ -118,7 +164,10 @@ class Sample extends Component {
             </Field>
           </div>
           <div className="text-center">
-            <button type="submit" className="btn btn-primary">Submit</button>
+            <button type="submit" 
+              className="btn btn-primary" 
+              disabled={!this.state.validForm}>Submit
+            </button>
           </div>
           <div><pre>{JSON.stringify(this.state, null, 2) }</pre></div>
         </form> 
@@ -128,4 +177,4 @@ class Sample extends Component {
   }
 }
 
-export default Sample;
+export default FormLevelSample;
