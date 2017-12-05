@@ -7,12 +7,24 @@ import {
   required, minLength, maxLength, number
 } from './rules';
 
-const categoriesArray = [ "Teriyaki", "Deep Fry", "Stir Fry", "Side" ];
+const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
 class Sample extends Component {
+  state = {
+    values: {},
+    errors: {}
+  }
   handleSubmit = e => {
     if (e) e.preventDefault();
+    console.log("values: ", this.state.values);
     return;
+  }
+
+  handleChange = (name, value, error) => {
+    this.setState({ 
+      values: { ...this.state.values, [name]: value },
+      errors: { ...this.state.errors, [name]: error }
+    })
   }
 
   render() {
@@ -26,18 +38,20 @@ class Sample extends Component {
             <Field
               name= 'name'
               rules= {[required, minLength(5), maxLength(20)]}
-              placeholder='Name of menu'
+              placeholder='Name of item'
               className='form-control'
+              onChange={this.handleChange}
             />            
           </div>
           <div className="form-group">
             <label>Description: </label>
             <Field
               name= 'description'
-              placeholder='Description of menu (optional)'
+              placeholder='Description of item (optional)'
               className='form-control'
               component='textarea'
               rows='4'
+              onChange={this.handleChange}
             />            
           </div>
           <div className="form-group">
@@ -46,8 +60,9 @@ class Sample extends Component {
               name= 'price'
               type='number'
               rules= {[required, number]}
-              placeholder='Price of menu'
+              placeholder='Price of item'
               className='form-control'
+              onChange={this.handleChange}
             />
           </div>
           <div className="form-group">
@@ -59,6 +74,7 @@ class Sample extends Component {
               component='select'
               rules= {[required]}
               className='form-control'
+              onChange={this.handleChange}
             >
               <option />
               { _.map(categoriesArray, value => {
@@ -76,7 +92,7 @@ class Sample extends Component {
           <div className="text-center">
             <button type="submit" className="btn btn-primary">Submit</button>
           </div>
-          <br /><br />
+          <div><pre>{JSON.stringify(this.state, null, 2) }</pre></div>
         </form> 
             
       </div>

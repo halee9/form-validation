@@ -14,23 +14,29 @@ export class Field extends Component {
     this.onValidate = false;
   }
 
+  handleParent = () => {
+    this.props.onChange(this.props.name, this.state.value, this.state.message); 
+  }
+
   validate = (value, rules) => {
     // console.log(value, rules)
     if (_.isArray(rules)){
       for (let i=0; i<rules.length; i++){
         const error = rules[i](value);
         if (error) {
-          this.setState({ message: error });
+          this.setState({ message: error }, this.handleParent);
           return;
         }
       }
-      this.setState({ message: '' });
+      this.setState({ message: '' }, this.handleParent);
     }
+    this.setState({ message: '' }, this.handleParent);
   }
 
   handleChange = (e) => {
     this.setState({ value: e.target.value }, () => {
-      return this.onValidate && this.validate(this.state.value, this.props.rules);
+      if (this.onValidate) this.validate(this.state.value, this.props.rules);
+      else this.handleParent();
     });
   }
 
