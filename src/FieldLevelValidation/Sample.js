@@ -16,7 +16,7 @@ class Sample extends Component {
   }
   handleSubmit = e => {
     if (e) e.preventDefault();
-    console.log("values: ", this.state.values);
+    console.log("e.target.name.value: ", e.target.name.value);
     return;
   }
 
@@ -37,7 +37,7 @@ class Sample extends Component {
             <label>Name: </label>
             <Field
               name= 'name'
-              rules= {[required, minLength(5), maxLength(20)]}
+              rules= {[required(), minLength(5), maxLength(20)]}
               placeholder='Name of item'
               className='form-control'
               onChange={this.handleChange}
@@ -59,7 +59,7 @@ class Sample extends Component {
             <Field
               name= 'price'
               type='number'
-              rules= {[required, number]}
+              rules= {[required(), number]}
               placeholder='Price of item'
               className='form-control'
               onChange={this.handleChange}
@@ -72,7 +72,7 @@ class Sample extends Component {
             <Field
               name= 'category'
               component='select'
-              rules= {[required]}
+              rules= {[required()]}
               className='form-control'
               onChange={this.handleChange}
             >
