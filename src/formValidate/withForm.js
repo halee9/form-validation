@@ -22,9 +22,12 @@ const fetchData = (formName, data) => {
   return { type: "fetchData", payload: {formName, data }}
 };
 
+const onComplete = (formName) => {
+  return { type: "onComplete", payload: {formName}}
+};
+
 export function withForm(formData) {
   const { formName, validate, remoteValidate } = formData;
-  
   return function(WrappedComponent){
     const mapStateToProps = state => ({form: state.forms[formName]});
     const mapDispatchToProps = (dispatch) => ({
@@ -32,6 +35,7 @@ export function withForm(formData) {
       onChange: value => dispatch(onChange(value)),
       onLoad: value => dispatch(onLoad(value)),
       onLoadField: value => dispatch(onLoadField(value)),
+      onComplete: value => dispatch(onComplete(value)),
       fetchData: value => dispatch(fetchData(formName, value)),
     })
   
@@ -43,8 +47,12 @@ export function withForm(formData) {
         this.props.onSubmit({ formName });
       }
       handleFetchData = (data) => {
-        console.log("handleFetchData: ", data)
+        // console.log("handleFetchData: ", data)
         this.props.fetchData(data);
+      }
+      handleComplete = () => {
+        // console.log("handleFetchData: ", data)
+        this.props.onComplete(formName);
       }
       
       componentWillMount(){
@@ -56,6 +64,7 @@ export function withForm(formData) {
           validate={validate} 
           handleSubmit={this.handleSubmit}
           handleFetchData={this.handleFetchData}
+          handleComplete={this.handleComplete}
           validForm={this.props.form && this.props.form.validForm}
           errors={this.props.form && this.props.form.errors}
           values={this.props.form && this.props.form.values}

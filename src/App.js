@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 // import FormValidateFieldLevel from './FormValidateFieldLevel'
+import LogIn from './components/LogIn';
 import MenuForm from './components/MenuForm';
 import MenuList from './components/MenuList';
+import CategoryForm from './components/CategoryForm';
+import CookingTypeForm from './components/CookingTypeForm';
+import IngredientsForm from './components/IngredientsForm';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'
@@ -28,9 +32,13 @@ class App extends Component {
         <Router>
           <div>
             <Route exact path="/" component={MenuList}/>
+            <Route exact path="/login" component={LogIn}/>
             <Route path="/new" component={MenuForm}/>
             <Route path="/menus/:id" component={MenuForm}/>
-          </div>
+            <Route path="/lookups/category" component={CategoryForm}/>
+            <Route path="/lookups/cookingType" component={CookingTypeForm}/>
+            <Route path="/lookups/ingredients" component={IngredientsForm}/>
+            </div>
         </Router>
       </Provider>
     );

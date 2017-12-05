@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { 
   withForm, 
@@ -11,7 +12,7 @@ import {
   required, minLength, maxLength, number
 } from '../validate';
 
-import { addMenu, fetchMenu, updateMenu, removeMenu } from '../actions/menu';
+import { addMenu, fetchMenu, updateMenu, removeMenu, fetchLookUps } from '../actions/menu';
 
 const categoriesArray = [ "Teriyaki", "Deep Fry", "Stir Fry", "Side" ];
 const cookingTypesArray = [ "Grill", "Wok", "Deep-fry", "Others"];
@@ -25,6 +26,7 @@ class MenuForm extends Component {
         this.props.handleFetchData({ ...snapshot.val(), id: snapshot.key })
       })
     }
+    this.props.fetchLookUps();
   }
   handleSubmit = e => {
     if (e) e.preventDefault();
@@ -55,19 +57,19 @@ class MenuForm extends Component {
   }
 
   render() {
-    const { handleSubmit, validForm, errors, values } = this.props;
+    const { handleSubmit, validForm, errors, values, lookups } = this.props;
     if (!values) return <div/>;
     const formTitle = values.id ? "Menu Update" : "New Menu";
     const buttonText = values.id ? "Update" : "Submit";
     const deleteButton = values.id ? 
-      <button type="button" className="btn btn-default" onClick={this.handleClickRemove}>Delete</button>
+      <button type="button" className="btn btn-warning" onClick={this.handleClickRemove}>Delete</button>
       : '';
     // if (this.props.match.params.id){
     //   if (this.props.menu) this.setInitValue(this.props.menu);
     //   //TODO: loading icon
     //   else return <div/>
     // }
-    console.log("render form: ", this.props)
+    // console.log("render form: ", this.props)
     return (
       <div>
         <h3>{formTitle}</h3>
@@ -103,7 +105,10 @@ class MenuForm extends Component {
             />
           </div>
           <div className="form-group">
-            <label>Category: </label>
+            <div>
+              <label>Category: </label>
+              <Link className="pull-right" to={`/lookups/category`}>Edit</Link>
+            </div>
             <Field
               name= 'category'
               component='select'
@@ -111,14 +116,13 @@ class MenuForm extends Component {
               className='form-control'
             >
               <option />
-              { categoriesArray.map( value => {
-                const val = _.camelCase(value);
+              { _.map(lookups.category, (item, key) => {
                 return (
                   <option 
-                    key={value} 
-                    value={val}
+                    key={key} 
+                    value={key}
                   >
-                    {value}
+                    {item.name}
                   </option>
                 )}
               )}
@@ -126,7 +130,10 @@ class MenuForm extends Component {
           </div>
 
           <div>
-            <label>Type of Cooking: </label>
+            <div>
+              <label>Type of Cooking: </label>
+              <Link className="pull-right" to={`/lookups/cookingType`}>Edit</Link>
+            </div>
             <Field 
               className="radio"
               name= 'cookingType'
@@ -135,17 +142,16 @@ class MenuForm extends Component {
               validates= {[required]}
             >
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-              { cookingTypesArray.map( value => {
-                console.log("this.props.values.cookingType: ", this.props.values.cookingType)
+              { _.map(lookups.cookingType, (item, key) => {
                 return ( 
-                  <label className="radio-inline" key={value}>
+                  <label className="radio-inline" key={key}>
                     <input 
                       type='radio' 
                       name='cookingType' 
-                      value={_.camelCase(value)} 
-                      checked={_.camelCase(value) === this.props.values.cookingType}
+                      value={key} 
+                      checked={key === this.props.values.cookingType}
                       onChange={() => {}}
-                    />{' '}{value}
+                    />{' '}{item.name}
                   </label>
                 )}
               )}
@@ -154,45 +160,46 @@ class MenuForm extends Component {
           </div>
 
           <div>
-            <label>Ingredients: </label>
+            <div>
+              <label>Ingredients: </label>
+              <Link className="pull-right" to={`/lookups/ingredients`}>Edit</Link>
+            </div>
             <Field 
               className="checkbox"
               name= 'ingredients'
               type='checkbox'
               component='checkboxes'
-              validates= {[required]}
             >
-              { ingredientsArray.map( value => {
-                const val = _.camelCase(value);
+              { _.map(lookups.ingredients, (item, key) => {
                 return (
-                  <label className="radio-inline" key={value}>
+                  <label className="radio-inline" key={key}>
                     <input type='checkbox' 
                       name='ingredients' 
-                      value={val} 
-                      checked={_.includes(this.props.values.ingredients, val)} 
+                      value={key} 
+                      checked={_.includes(this.props.values.ingredients, key)} 
                       onChange={() => {}}
-                    />{' '}{value}
+                    />{' '}{item.name}
                   </label>
                 )}
               )}
             </Field>
           </div>
-        { deleteButton }{' '}
-        <button type="submit" className="btn btn-primary" disabled={!validForm}>{buttonText}</button>
-        <br /><br />
-        <div><pre>{JSON.stringify(this.props, null, 2) }</pre></div>
+          <div className="text-center">
+            { deleteButton }{' '}
+            <button type="submit" className="btn btn-primary" disabled={!validForm}>{buttonText}</button>
+          </div>
+          <br /><br />
         </form> 
+        <div><pre>{JSON.stringify(this.props, null, 2) }</pre></div>
             
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ menus }, ownProps) => {
-  const menu = menus[ownProps.match.params.id];
-  return { menu };
-};
+const mapStateToProps = state => ({lookups: state.lookups});
 
-const enhanced = connect(mapStateToProps, { addMenu, fetchMenu, updateMenu, removeMenu })(MenuForm);
+const enhanced = connect(mapStateToProps, 
+  { addMenu, fetchMenu, updateMenu, removeMenu, fetchLookUps })(MenuForm);
 
 export default withForm({ formName: "MenuForm" })(enhanced);

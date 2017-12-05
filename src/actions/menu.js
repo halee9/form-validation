@@ -4,6 +4,8 @@ import { database } from '../config';
 export const FETCH_MENUS = 'FETCH_MENUS';
 export const FETCH_MENU = 'FETCH_MENU';
 export const ADD_MENU = 'ADD_MENU';
+export const FETCH_LOOKUPS = 'FETCH_LOOKUPS';
+
 
 const systemName = 'srm';
 const currentUser = {
@@ -44,5 +46,15 @@ export const removeMenu = (id) => {
   return (dispatch) => {
     return database.ref(`/${systemName}/${currentUser.uid}/menus/${id}`)
       .remove()
+  };
+};
+
+export const fetchLookUps = () => { 
+  return (dispatch) => {
+    database.ref(`/${systemName}/${currentUser.uid}/lookups`)
+      .on('value', snapshot => {
+        console.log(snapshot.val())
+        dispatch({ type: FETCH_LOOKUPS, payload: snapshot.val() });
+      })
   };
 };

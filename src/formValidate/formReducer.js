@@ -111,7 +111,7 @@ export function formReducer(state={}, action){
   }
   else if (type === 'fetchData'){
     const { formName, data } = payload;
-    // console.log("fetchData: ", data, formName)
+    console.log("fetchData: ", data, formName)
     const form = state[formName];
     const errors = validateForm(data, form.fieldValidates);
     const valids = setValidWithErrors(form.valids, errors);
@@ -127,6 +127,13 @@ export function formReducer(state={}, action){
         validForm
       }
     };
+  }
+  
+  else if (type === 'onComplete'){
+    const { formName } = payload;
+    // delete state[formName];
+    // console.log(state)
+    return { ...state, [formName]: initailizeForm(formName) }
   }
   else return state;
 }

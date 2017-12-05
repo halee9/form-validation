@@ -1,18 +1,10 @@
-import { auth } from '../firebase';
+import { auth } from '../config';
 
 export const EMAIL_CHANGED = 'email_changed';
 export const PASSWORD_CHANGED = 'password_changed';
 export const LOGIN_USER_SUCCESS = 'login_user_success';
 export const LOGIN_USER_FAIL = 'login_user_fail';
 export const LOGIN_USER = 'login_user';
-
-// import {
-//   EMAIL_CHANGED,
-//   PASSWORD_CHANGED,
-//   LOGIN_USER_SUCCESS,
-//   LOGIN_USER_FAIL,
-//   LOGIN_USER
-// } from './types';
 
 export const emailChanged = (text) => {
   return {
@@ -57,10 +49,3 @@ const loginUserSuccess = async (dispatch, user, callback) => {
   });
   callback();
 };
-
-// export const loginSuccessFromAsyncstorage = user => {
-//   return {
-//     type: LOGIN_USER_SUCCESS,
-//     payload: user
-//   }
-// }
