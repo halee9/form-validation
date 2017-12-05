@@ -170,7 +170,7 @@ class FormLevelSample extends Component {
             </button>
             {' '}
             <button type="submit" 
-              className="btn btn-primary">
+              className="btn btn-primary">Submit
             </button>
           </div>
           <div><pre>{JSON.stringify(this.state, null, 2) }</pre></div>
