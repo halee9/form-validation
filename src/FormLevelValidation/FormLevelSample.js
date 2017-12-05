@@ -168,6 +168,10 @@ class FormLevelSample extends Component {
               className="btn btn-primary" 
               disabled={!this.state.validForm}>Submit
             </button>
+            {' '}
+            <button type="submit" 
+              className="btn btn-primary">
+            </button>
           </div>
           <div><pre>{JSON.stringify(this.state, null, 2) }</pre></div>
         </form> 
