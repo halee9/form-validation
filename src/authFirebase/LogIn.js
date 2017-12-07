@@ -59,5 +59,7 @@ class LogInForm extends Component {
   }
 }
 
-const withRedux = connect(null,{ loginUser })(LogInForm);
+const mapStateToProps = ({auth}) => ({auth});
+
+const withRedux = connect(mapStateToProps,{ loginUser })(LogInForm);
 export const LogIn = withForm({ formName: "LogIn" })(withRedux);

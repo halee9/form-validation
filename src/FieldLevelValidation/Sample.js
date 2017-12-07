@@ -69,6 +69,7 @@ class Sample extends Component {
               placeholder='Name of item'
               className='form-control'
               onChange={this.handleChange}
+              message={this.state.errors.name}
             />            
           </div>
           <div className="form-group">
@@ -91,6 +92,7 @@ class Sample extends Component {
               placeholder='Price of item'
               className='form-control'
               onChange={this.handleChange}
+              message={this.state.errors.price}
             />
           </div>
           <div className="form-group">
@@ -103,6 +105,7 @@ class Sample extends Component {
               rules= {[required()]}
               className='form-control'
               onChange={this.handleChange}
+              message={this.state.errors.category}
             >
               <option />
               { _.map(categoriesArray, value => {

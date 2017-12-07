@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { database } from '../config';
+import { database, auth } from '../config';
 
 export const FETCH_MENUS = 'FETCH_MENUS';
 export const FETCH_MENU = 'FETCH_MENU';
@@ -13,9 +13,13 @@ const currentUser = {
 }
 
 export const fetchMenus = () => { 
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    // const { user } = getState().auth;
+    console.log("currentUser: ", systemName, currentUser)
+    // if (!user) return;
     database.ref(`/${systemName}/${currentUser.uid}/menus`)
-      .on('value', snapshot => {
+      .once('value', snapshot => {
+        console.log(snapshot.key)
         dispatch({ type: FETCH_MENUS, payload: snapshot.val() });
       })
   };

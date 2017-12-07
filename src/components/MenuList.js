@@ -7,6 +7,7 @@ import { fetchMenus, fetchLookUps } from '../actions/menu';
 
 class MenuList extends Component {
   componentDidMount(){
+    console.log("component did mount")
     this.props.fetchLookUps();
     this.props.fetchMenus();
   }

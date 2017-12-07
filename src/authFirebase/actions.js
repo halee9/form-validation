@@ -5,6 +5,39 @@ export const PASSWORD_CHANGED = 'password_changed';
 export const LOGIN_USER_SUCCESS = 'login_user_success';
 export const LOGIN_USER_FAIL = 'login_user_fail';
 export const LOGIN_USER = 'login_user';
+export const SIGNOUT_USER = 'signout_user';
+
+const authUser = (user) => ({
+  type: LOGIN_USER_SUCCESS,
+  payload: user
+});
+
+const signOutUser = () => {
+  return function (dispatch) {
+    auth.signOut()
+    .then(() =>{
+      dispatch({
+        type: SIGNOUT_USER
+      })
+    });
+  }
+}
+
+export const verifyAuth = () => {
+  return dispatch => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        console.log("signin: ", user.uid)
+        dispatch(authUser(user));
+      } 
+      else {
+        console.log("signout ")
+        dispatch(signOutUser());
+      }
+    });
+    
+  }
+}
 
 export const emailChanged = (text) => {
   return {
@@ -41,8 +74,7 @@ const loginUserFail = (dispatch) => {
   dispatch({ type: LOGIN_USER_FAIL });
 };
 
-const loginUserSuccess = async (dispatch, user, callback) => {
-  // await AsyncStorage.setItem('user', JSON.stringify(user))
+const loginUserSuccess = (dispatch, user, callback) => {
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user

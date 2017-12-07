@@ -9,7 +9,7 @@ export class Field extends Component {
     super(props);
     this.state = {
       value: props.value || '',
-      message: ''
+      message: props.message || ''
     }
     this.onValidate = false;
   }
@@ -54,7 +54,7 @@ export class Field extends Component {
           onChange={this.handleChange}
           onBlur={this.handleBlur}
         />
-        <div className='error-message'>{this.state.message}</div>
+        <div className='error-message'>{this.props.message}</div>
       </div>
     );
   }
@@ -75,7 +75,7 @@ export class Field extends Component {
         >
           { children }
         </select>
-        <div className='error-message'>{this.state.message}</div>
+        <div className='error-message'>{this.props.message}</div>
       </div>
     )
   }
