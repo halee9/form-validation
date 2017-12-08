@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import { Field } from './Field';
 
 import {
   required, minLength, maxLength, number
@@ -28,19 +27,19 @@ class FormLevelSample2 extends Component {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Name: </label>
-            <Field
-              name= 'name'
+            <input
+              name='name'
               placeholder='Name of item'
               className='form-control'
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.name}
-              message={errors.name}
-            />            
+            /> 
+            <div>{errors.name}</div>      
           </div>
           <div className="form-group">
             <label>Description: </label>
-            <Field
+            <textarea
               name= 'description'
               placeholder='Description of item (optional)'
               className='form-control'
@@ -49,12 +48,12 @@ class FormLevelSample2 extends Component {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.description}
-              message={errors.description}
-            />            
+            /> 
+            <div>{errors.description}</div>           
           </div>
           <div className="form-group">
             <label>Price: </label>
-            <Field
+            <input
               name= 'price'
               type='number'
               placeholder='Price of item'
@@ -62,14 +61,14 @@ class FormLevelSample2 extends Component {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.price}
-              message={errors.price}
             />
+            <div>{errors.price}</div>
           </div>
           <div className="form-group">
             <div>
               <label>Category: </label>
             </div>
-            <Field
+            <select
               name= 'category'
               component='select'
               className='form-control'
@@ -88,7 +87,8 @@ class FormLevelSample2 extends Component {
                   </option>
                 )}
               )}
-            </Field>
+            </select>
+            <div>{errors.category}</div>
           </div>
           <div className="text-center">
             <button type="submit" 
