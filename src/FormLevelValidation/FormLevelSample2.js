@@ -7,6 +7,7 @@ import {
 } from './rules';
 
 import { withForm } from './withForm';
+import './Field.css';
 
 const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
@@ -35,12 +36,12 @@ class FormLevelSample2 extends Component {
               onBlur={handleBlur}
               value={values.name}
             /> 
-            <div>{errors.name}</div>      
+            <div className='error-message'>{errors.name}</div>      
           </div>
           <div className="form-group">
             <label>Description: </label>
             <textarea
-              name= 'description'
+              name='description'
               placeholder='Description of item (optional)'
               className='form-control'
               component='textarea'
@@ -49,12 +50,12 @@ class FormLevelSample2 extends Component {
               onBlur={handleBlur}
               value={values.description}
             /> 
-            <div>{errors.description}</div>           
+            <div className='error-message'>{errors.description}</div>           
           </div>
           <div className="form-group">
             <label>Price: </label>
             <input
-              name= 'price'
+              name='price'
               type='number'
               placeholder='Price of item'
               className='form-control'
@@ -62,19 +63,18 @@ class FormLevelSample2 extends Component {
               onBlur={handleBlur}
               value={values.price}
             />
-            <div>{errors.price}</div>
+            <div className='error-message'>{errors.price}</div>
           </div>
           <div className="form-group">
             <div>
               <label>Category: </label>
             </div>
             <select
-              name= 'category'
+              name='category'
               component='select'
               className='form-control'
               onChange={handleChange}
               value={values.category}
-              message={errors.category}
             >
               <option />
               { _.map(categoriesArray, value => {
@@ -88,7 +88,7 @@ class FormLevelSample2 extends Component {
                 )}
               )}
             </select>
-            <div>{errors.category}</div>
+            <div className='error-message'>{errors.category}</div>
           </div>
           <div className="text-center">
             <button type="submit" 
