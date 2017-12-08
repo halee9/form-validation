@@ -18,7 +18,7 @@ const rules = {
   category: [required()],
 }
 
-class FormLevelSample2 extends Component {
+class FormLevelSample extends Component {
   render() {
     const { handleChange, handleBlur, handleSubmit, values, errors, validForm } = this.props;
     return (
@@ -108,4 +108,4 @@ class FormLevelSample2 extends Component {
   }
 }
 
-export default withForm(rules)(FormLevelSample2);
+export default withForm(rules)(FormLevelSample);
