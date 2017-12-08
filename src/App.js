@@ -14,7 +14,7 @@ import CookingTypeForm from './components/CookingTypeForm';
 import IngredientsForm from './components/IngredientsForm';
 import Sample from './FieldLevelValidation/Sample';
 import FormLevelSample from './FormLevelValidation/FormLevelSample';
-import FormLevelSample2 from './FormLevelValidation/FormLevelSample2';
+import FormLevelSample2 from './ReactFormValidation/FormLevelSample';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'

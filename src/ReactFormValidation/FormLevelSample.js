@@ -7,14 +7,14 @@ import {
 } from './rules';
 
 import { withForm } from './withForm';
-import './Field.css';
 
 const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
 const rules = {
-  name: [required("Custom required"), minLength(5), maxLength(20)],
-  description: [false, minLength(5)],
-  price: [required(), number],
+  name: [required("Custom required"), minLength(5)(), maxLength(20)()],
+  // set false at first index if the field is optional.
+  description: [false, minLength(5)()],
+  price: [required(), number()],
   category: [required()],
 }
 
@@ -34,9 +34,9 @@ class FormLevelSample2 extends Component {
               className='form-control'
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.name}
+              value={values.name || ''}
             /> 
-            <div className='error-message'>{errors.name}</div>      
+            <div className='text-danger'>{errors.name}</div>      
           </div>
           <div className="form-group">
             <label>Description: </label>
@@ -48,22 +48,22 @@ class FormLevelSample2 extends Component {
               rows='4'
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.description}
+              value={values.description || ''}
             /> 
-            <div className='error-message'>{errors.description}</div>           
+            <div className='text-danger'>{errors.description}</div>           
           </div>
           <div className="form-group">
             <label>Price: </label>
             <input
               name='price'
-              type='number'
+              type='text'
               placeholder='Price of item'
               className='form-control'
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.price}
+              value={values.price || ''}
             />
-            <div className='error-message'>{errors.price}</div>
+            <div className='text-danger'>{errors.price}</div>
           </div>
           <div className="form-group">
             <div>
@@ -74,7 +74,7 @@ class FormLevelSample2 extends Component {
               component='select'
               className='form-control'
               onChange={handleChange}
-              value={values.category}
+              value={values.category || ''}
             >
               <option />
               { _.map(categoriesArray, value => {
@@ -88,7 +88,7 @@ class FormLevelSample2 extends Component {
                 )}
               )}
             </select>
-            <div className='error-message'>{errors.category}</div>
+            <div className='text-danger'>{errors.category}</div>
           </div>
           <div className="text-center">
             <button type="submit" 

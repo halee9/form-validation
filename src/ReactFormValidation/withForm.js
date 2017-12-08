@@ -22,7 +22,6 @@ export function withForm(rules){
       onValidate = false;
       validFields = _.reduce(rules, (acc, rule, key) => {
         acc[key] = rule[0] ? false : true;
-        console.log(acc)
         return acc;
       },{});
       state = {
@@ -88,7 +87,8 @@ export function withForm(rules){
           if (error) {
             this.setState({ 
               values: { ...this.state.values, [name]: value },
-              errors: { ...this.state.errors, [name]: error }
+              errors: { ...this.state.errors, [name]: error },
+              validForm: _.every(this.validFields)
             })
           }
         });
@@ -101,6 +101,7 @@ export function withForm(rules){
             { ...this.props }
             values={this.state.values}
             errors={this.state.errors}
+            validFields={this.validFields}
             validForm={this.state.validForm}
             handleChange={this.handleChange}
             handleBlur={this.handleBlur}

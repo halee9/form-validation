@@ -10,8 +10,8 @@ import {
 const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
 const rules = {
-  name: [required("Custom required"), minLength(5), maxLength(20)],
-  price: [required(), number],
+  name: [required("Custom required"), minLength(5)(), maxLength(20)()],
+  price: [required(), number()],
   category: [required()],
 }
 
