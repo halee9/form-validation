@@ -13,34 +13,29 @@ const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
 const rules = {
   name: [required("Custom required"), minLength(5), maxLength(20)],
+  description: [false, minLength(5)],
   price: [required(), number],
   category: [required()],
 }
 
-const validFields = {
-  name: false,
-  description: true,
-  price: false,
-  category: false,
-};
-
 class FormLevelSample2 extends Component {
   render() {
+    const { handleChange, handleBlur, handleSubmit, values, errors, validForm } = this.props;
     return (
       <div>
-        <h3>Form Level Validation Sample</h3>
+        <h3>Form Level Validation Sample with HOC</h3>
         <hr />
-        <form onSubmit={this.props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Name: </label>
             <Field
               name= 'name'
               placeholder='Name of item'
               className='form-control'
-              onChange={this.props.handleChange}
-              onBlur={this.props.handleBlur}
-              value={this.props.values.name}
-              message={this.props.errors.name}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.name}
+              message={errors.name}
             />            
           </div>
           <div className="form-group">
@@ -51,10 +46,10 @@ class FormLevelSample2 extends Component {
               className='form-control'
               component='textarea'
               rows='4'
-              onChange={this.props.handleChange}
-              onBlur={this.props.handleBlur}
-              value={this.props.values.description}
-              message={this.props.errors.description}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.description}
+              message={errors.description}
             />            
           </div>
           <div className="form-group">
@@ -64,10 +59,10 @@ class FormLevelSample2 extends Component {
               type='number'
               placeholder='Price of item'
               className='form-control'
-              onChange={this.props.handleChange}
-              onBlur={this.props.handleBlur}
-              value={this.props.values.price}
-              message={this.props.errors.price}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.price}
+              message={errors.price}
             />
           </div>
           <div className="form-group">
@@ -78,9 +73,9 @@ class FormLevelSample2 extends Component {
               name= 'category'
               component='select'
               className='form-control'
-              onChange={this.props.handleChange}
-              value={this.props.values.category}
-              message={this.props.errors.category}
+              onChange={handleChange}
+              value={values.category}
+              message={errors.category}
             >
               <option />
               { _.map(categoriesArray, value => {
@@ -98,7 +93,7 @@ class FormLevelSample2 extends Component {
           <div className="text-center">
             <button type="submit" 
               className="btn btn-primary" 
-              disabled={!this.props.validForm}>Submit
+              disabled={!validForm}>Submit
             </button>
             {' '}
             <button type="submit" 
@@ -113,4 +108,4 @@ class FormLevelSample2 extends Component {
   }
 }
 
-export default withForm(FormLevelSample2, rules, validFields);
+export default withForm(FormLevelSample2, rules);

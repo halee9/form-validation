@@ -4,9 +4,11 @@ import _ from 'lodash';
 const validate = (value, rules, callback) => {
   if (_.isArray(rules)){
     for (let i=0; i<rules.length; i++){
-      const error = rules[i](value);
-      if (error) {
-        return callback(error);
+      if (rules[i]){
+        const error = rules[i](value);
+        if (error) {
+          return callback(error);
+        }
       }
     }
     return callback(false);
@@ -14,10 +16,14 @@ const validate = (value, rules, callback) => {
   return callback(false);
 }
 
-export function withForm(WrappedComponent, rules, validFields){
+export function withForm(WrappedComponent, rules){
   return class extends Component {
     onValidate = false;
-    validFields = validFields;
+    validFields = _.reduce(rules, (acc, rule, key) => {
+      acc[key] = rule[0] ? false : true;
+      console.log(acc)
+      return acc;
+    },{});
     state = {
       values: {},
       errors: {},
@@ -50,7 +56,6 @@ export function withForm(WrappedComponent, rules, validFields){
   
     handleChange = e => {
       const { name, value } = e.target;
-      this.onValidate = true;
       if (this.onValidate) {
         validate(value, rules[name], error => {
           if (error) {

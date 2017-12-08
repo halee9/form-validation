@@ -65,7 +65,6 @@ class FormLevelSample extends Component {
 
   handleChange = e => {
     const { name, value } = e.target;
-    this.onValidate = true;
     if (this.onValidate) {
       validate(value, rules[name], error => {
         if (error) {
