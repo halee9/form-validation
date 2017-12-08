@@ -108,4 +108,4 @@ class FormLevelSample2 extends Component {
   }
 }
 
-export default withForm(FormLevelSample2, rules);
+export default withForm(rules)(FormLevelSample2);
