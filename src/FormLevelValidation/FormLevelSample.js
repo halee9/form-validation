@@ -30,6 +30,12 @@ const validate = (value, rules, callback) => {
 
 class FormLevelSample extends Component {
   onValidate = false;
+  validFields = {
+    name: false,
+    description: true,
+    price: false,
+    category: false,
+  };
   state = {
     values: {},
     errors: {},
@@ -37,8 +43,7 @@ class FormLevelSample extends Component {
   }
 
   componentDidMount(){
-    const validForm = rules.length > 0 ? false : true;
-    this.setState({ validForm });
+    this.setState({ validForm: _.every(this.validFields) });
   }
 
   handleSubmit = e => {
@@ -49,10 +54,12 @@ class FormLevelSample extends Component {
       if (e.type && e.type != 'submit'){
         validate(e.value, rules[e.name], error => {
           errors[e.name] = error;
+          this.validFields[e.name] = false;
         })
       }
     })
-    this.setState({ errors });
+    this.setState({ errors, validForm: _.every(this.validFields) });
+    this.onValidate = true;
     return;
   }
 
@@ -62,15 +69,19 @@ class FormLevelSample extends Component {
     if (this.onValidate) {
       validate(value, rules[name], error => {
         if (error) {
+          this.validFields[name] = false;
           this.setState({ 
             values: { ...this.state.values, [name]: value },
-            errors: { ...this.state.errors, [name]: error }
+            errors: { ...this.state.errors, [name]: error },
+            validForm: _.every(this.validFields)
           })
         }
         else {
+          this.validFields[name] = true;
           this.setState({ 
             values: { ...this.state.values, [name]: value },
-            errors: { ...this.state.errors, [name]: '' }
+            errors: { ...this.state.errors, [name]: '' },
+            validForm: _.every(this.validFields)
           })
         }
       });

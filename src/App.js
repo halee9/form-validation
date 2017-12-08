@@ -5,6 +5,7 @@ import logger from 'redux-logger'
 
 import { LogIn } from './authFirebase';
 import { verifyAuth } from './authFirebase/actions';
+import { withAuth } from './authFirebase/withAuth';
 
 import MenuForm from './components/MenuForm';
 import MenuList from './components/MenuList';
@@ -48,7 +49,7 @@ class App extends Component {
       <Provider store={store}>
         <Router>
           <div>
-            <Route exact path="/home" component={MenuList}/>
+            <Route exact path="/home" component={withAuth(MenuList)}/>
             <Route exact path="/login" component={LogIn}/>
             <Route path="/new" component={MenuForm}/>
             <Route path="/menus/:id" component={MenuForm}/>

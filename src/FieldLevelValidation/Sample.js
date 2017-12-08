@@ -65,7 +65,7 @@ class Sample extends Component {
             <label>Name: </label>
             <Field
               name= 'name'
-              rules= {[required("Custom required"), minLength(5), maxLength(20)]}
+              rules= {[minLength(5), maxLength(20)]}
               placeholder='Name of item'
               className='form-control'
               onChange={this.handleChange}
