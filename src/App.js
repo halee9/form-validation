@@ -14,6 +14,7 @@ import CookingTypeForm from './components/CookingTypeForm';
 import IngredientsForm from './components/IngredientsForm';
 import Sample from './FieldLevelValidation/Sample';
 import FormLevelSample from './FormLevelValidation/FormLevelSample';
+import FormLevelSample2 from './FormLevelValidation/FormLevelSample2';
 import { createStore, compose, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'
@@ -58,6 +59,7 @@ class App extends Component {
             <Route path="/lookups/ingredients" component={IngredientsForm}/>
             <Route path="/sample" component={Sample}/>
             <Route path="/formSample" component={FormLevelSample}/>
+            <Route path="/formSample2" component={FormLevelSample2}/>
             {/* <Redirect from="/" to="/login"/> */}
             </div>
         </Router>
