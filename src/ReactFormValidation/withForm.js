@@ -19,7 +19,10 @@ const validate = (value, rules, callback) => {
 export function withForm(rules){
   return function(WrappedComponent){
     return class extends Component {
-      onValidate = false;
+      onValidates = _.reduce(rules, (acc, rule, key) => {
+        acc[key] = false;
+        return acc;
+      },{});
       validFields = _.reduce(rules, (acc, rule, key) => {
         acc[key] = rule[0] ? false : true;
         return acc;
@@ -33,6 +36,22 @@ export function withForm(rules){
       componentDidMount(){
         this.setState({ validForm: _.every(this.validFields) });
       }
+
+      handleFetchedData = values => {
+        let errors = {};
+        _.map(values, (value, name) => {
+          validate(value, rules[name], error => {
+            if (error){
+              errors[name] = error;
+              this.validFields[name] = false;
+            }
+            else this.validFields[name] = true;
+            this.onValidates[name] = true;
+          })
+        });
+        this.setState({ values, errors, validForm: _.every(this.validFields)});
+        
+      }
   
       handleSubmit = e => {
         if (e) e.preventDefault();
@@ -41,22 +60,25 @@ export function withForm(rules){
         _.map(elements, e => {
           if (e.type && e.type != 'submit'){
             validate(e.value, rules[e.name], error => {
-              errors[e.name] = error;
-              this.validFields[e.name] = false;
+              if (error){
+                errors[e.name] = error;
+                this.validFields[e.name] = false;
+              }
+              else this.validFields[e.name] = false;
+              this.onValidates[e.name] = true;
             })
           }
         })
         this.setState({ errors, validForm: _.every(this.validFields) });
-        this.onValidate = true;
-        if (this.state.validForm){
-          alert("The form was submitted!")
-        }
+        // if (this.state.validForm){
+        //   alert("The form was submitted!")
+        // }
         return;
       }
     
       handleChange = e => {
         const { name, value } = e.target;
-        if (this.onValidate) {
+        if (this.onValidates[name]) {
           validate(value, rules[name], error => {
             if (error) {
               this.validFields[name] = false;
@@ -92,7 +114,7 @@ export function withForm(rules){
             })
           }
         });
-        this.onValidate = true;
+        this.onValidates[name] = true;
       }
   
       render(){
@@ -106,6 +128,7 @@ export function withForm(rules){
             handleChange={this.handleChange}
             handleBlur={this.handleBlur}
             handleSubmit={this.handleSubmit}
+            handleFetchedData={this.handleFetchedData}
           />
         )
       }

@@ -59,7 +59,8 @@ class App extends Component {
             <Route path="/lookups/ingredients" component={IngredientsForm}/>
             <Route path="/sample" component={Sample}/>
             <Route path="/formSample" component={FormLevelSample}/>
-            <Route path="/formSample2" component={FormLevelSample2}/>
+            <Route exact path="/formSample2" component={FormLevelSample2}/>
+            <Route path="/formSample2/:id" component={FormLevelSample2}/>
             {/* <Redirect from="/" to="/login"/> */}
             </div>
         </Router>

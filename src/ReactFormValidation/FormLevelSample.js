@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import {
   required, minLength, maxLength, number
@@ -18,12 +19,26 @@ const rules = {
   category: [required()],
 }
 
+const fetchedData = {
+  name: "Test",
+  description: "description asfdf",
+  price: 9.99,
+  category: "Others"
+}
+
 class FormLevelSample extends Component {
+  componentWillMount(){
+    const { params } = this.props.match;
+    if (params.id) {
+      this.props.handleFetchedData(fetchedData);
+    }
+  }
   render() {
     const { handleChange, handleBlur, handleSubmit, values, errors, validForm } = this.props;
     return (
       <div>
         <h3>Form Level Validation Sample with HOC</h3>
+        <Link className='pull-right' to='/formSample2/11'>Fetch data</Link>
         <hr />
         <form onSubmit={handleSubmit}>
           <div className="form-group">
