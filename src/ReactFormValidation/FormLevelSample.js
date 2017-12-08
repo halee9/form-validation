@@ -125,6 +125,7 @@ class FormLevelSample extends Component {
               className="btn btn-primary">Submit
             </button>
           </div>
+          <hr/>
           <div><pre>{JSON.stringify(this.props, null, 2) }</pre></div>
         </form> 
             
