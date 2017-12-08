@@ -53,7 +53,7 @@ export function withForm(rules){
         
       }
   
-      handleSubmit = e => {
+      handleSubmit = (e, callback) => {
         if (e) e.preventDefault();
         const elements = e.target.elements;
         let errors = {};
@@ -64,16 +64,15 @@ export function withForm(rules){
                 errors[e.name] = error;
                 this.validFields[e.name] = false;
               }
-              else this.validFields[e.name] = false;
+              else this.validFields[e.name] = true;
               this.onValidates[e.name] = true;
             })
           }
         })
-        this.setState({ errors, validForm: _.every(this.validFields) });
-        // if (this.state.validForm){
-        //   alert("The form was submitted!")
-        // }
-        return;
+        const validForm = _.every(this.validFields);
+        this.setState({ errors, validForm }, () => {
+          if (callback) callback(validForm);
+        });
       }
     
       handleChange = e => {

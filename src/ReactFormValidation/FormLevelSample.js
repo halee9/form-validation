@@ -12,7 +12,7 @@ import { withForm } from './withForm';
 const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
 const rules = {
-  name: [required("Custom required"), minLength(5)(), maxLength(20)()],
+  name: [required("You can set customized message"), minLength(5)(), maxLength(20)()],
   // set false at first index if the field is optional.
   description: [false, minLength(5)()],
   price: [required(), number()],
@@ -33,6 +33,16 @@ class FormLevelSample extends Component {
       this.props.handleFetchedData(fetchedData);
     }
   }
+
+  handleSubmit = (e) => {
+    this.props.handleSubmit(e, (res) => {
+      if (res) {
+        alert("Form will be submitted!!");
+      }
+    });
+    
+  }
+
   render() {
     const { handleChange, handleBlur, handleSubmit, values, errors, validForm } = this.props;
     return (
@@ -40,7 +50,7 @@ class FormLevelSample extends Component {
         <h3>Form Level Validation Sample with HOC</h3>
         <Link className='pull-right' to='/formSample2/11'>Fetch data</Link>
         <hr />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Name: </label>
             <input
