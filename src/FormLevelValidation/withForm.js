@@ -14,15 +14,10 @@ const validate = (value, rules, callback) => {
   return callback(false);
 }
 
-export function withForm(WrappedComponent, rules){
+export function withForm(WrappedComponent, rules, validFields){
   return class extends Component {
     onValidate = false;
-    validFields = {
-      name: false,
-      description: true,
-      price: false,
-      category: false,
-    };
+    validFields = validFields;
     state = {
       values: {},
       errors: {},

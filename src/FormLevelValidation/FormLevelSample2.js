@@ -17,6 +17,13 @@ const rules = {
   category: [required()],
 }
 
+const validFields = {
+  name: false,
+  description: true,
+  price: false,
+  category: false,
+};
+
 class FormLevelSample2 extends Component {
   render() {
     return (
@@ -106,4 +113,4 @@ class FormLevelSample2 extends Component {
   }
 }
 
-export default withForm(FormLevelSample2, rules);
+export default withForm(FormLevelSample2, rules, validFields);
