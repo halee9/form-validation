@@ -99,6 +99,7 @@ class FormLevelSample extends Component {
               component='select'
               className='form-control'
               onChange={handleChange}
+              onBlur={handleBlur}
               value={values.category || ''}
             >
               <option />

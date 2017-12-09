@@ -7,6 +7,8 @@ import { LogIn } from './authFirebase';
 import { verifyAuth } from './authFirebase/actions';
 import { withAuth } from './authFirebase/withAuth';
 
+import { SimplePage } from './SimpleForm2/SimplePage';
+
 import MenuForm from './components/MenuForm';
 import MenuList from './components/MenuList';
 import CategoryForm from './components/CategoryForm';
@@ -34,8 +36,8 @@ const store = createStore(
   )
 );
 
-store.dispatch(verifyAuth());
-console.log(store)
+// store.dispatch(verifyAuth());
+// console.log(store)
 
 class App extends Component {
   componentDidMount(){
@@ -61,6 +63,8 @@ class App extends Component {
             <Route path="/formSample" component={FormLevelSample}/>
             <Route exact path="/formSample2" component={FormLevelSample2}/>
             <Route path="/formSample2/:id" component={FormLevelSample2}/>
+
+            <Route path="/simplePage" component={SimplePage}/>
             {/* <Redirect from="/" to="/login"/> */}
             </div>
         </Router>

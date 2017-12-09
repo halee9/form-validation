@@ -104,16 +104,25 @@ export function withForm(rules){
     
       handleBlur = (e) => {
         const { name, value } = e.target;
+        this.onValidates[name] = true;
         validate(value, rules[name], error => {
           if (error) {
+            this.validFields[name] = false;
             this.setState({ 
               values: { ...this.state.values, [name]: value },
               errors: { ...this.state.errors, [name]: error },
               validForm: _.every(this.validFields)
             })
           }
+          else {
+            this.validFields[name] = true;
+            this.setState({ 
+              values: { ...this.state.values, [name]: value },
+              errors: { ...this.state.errors, [name]: '' },
+              validForm: _.every(this.validFields)
+            })
+          }
         });
-        this.onValidates[name] = true;
       }
   
       render(){
