@@ -2,15 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { withForm } from '../ReactFormValidation';
+import { withForm } from './withForm';
 
 import { addItem, updateItem, fetchItem, removeItem } from './firebaseActions';
 
-export function withFirebaseCRUD(database, path, urlBackTo) {
+export function withFirebaseCRUD({database, firebasePath, urlBackTo, rules}) {
   return function(WrappedComponent){
-    return class extends Component {
-        handleFetchItem = id => {
-        fetchItem(database, path, id)
+    class HOC extends Component {
+      handleFetchItem = id => {
+        fetchItem(database, firebasePath, id)
         .then(snapshot => {
           this.props.handleFetchedData({ ...snapshot.val(), id: snapshot.key });
         })
@@ -45,12 +45,12 @@ export function withFirebaseCRUD(database, path, urlBackTo) {
                 return acc;
               }, {});
               if (formValues.id){
-                updateItem(database, path, formValues).then(() => { 
+                updateItem(database, firebasePath, formValues).then(() => { 
                   this.props.history.push(urlBackTo);
                 });
               }
               else {
-                addItem(database, path, formValues).then(() => { 
+                addItem(database, firebasePath, formValues).then(() => { 
                   this.props.history.push(urlBackTo);
                 });
               }
@@ -62,7 +62,7 @@ export function withFirebaseCRUD(database, path, urlBackTo) {
       handleClickRemove = () => {
         const { values } = this.props;
         if (!values.id) return;
-        removeItem(database, path, values.id).then(() => { 
+        removeItem(database, firebasePath, values.id).then(() => { 
           this.props.history.push(urlBackTo);
         });
       }
@@ -78,5 +78,6 @@ export function withFirebaseCRUD(database, path, urlBackTo) {
       }
     }
 
+    return withForm(rules)(HOC);
   }
 }
