@@ -128,7 +128,6 @@ export function withForm(rules){
 
       ruleChanged = (name, rule) => {
         this.rules[name] = rule;
-        console.log("this.rules: ", this.rules)
       }
   
       render(){
