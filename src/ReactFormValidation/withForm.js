@@ -41,7 +41,6 @@ export function withForm(rules){
       },{});
 
       validate = (name, value, callback) => {
-        console.log("validate: ", name, value)
         let error = false;
         const rules = this.rules[name];
         if (_.isArray(rules)){
