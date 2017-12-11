@@ -32,6 +32,7 @@ export function withForm(rules){
         errors: {},
         validForm: false
       }
+      rules = rules;
   
       componentDidMount(){
         this.setState({ validForm: _.every(this.validFields) });
@@ -40,7 +41,7 @@ export function withForm(rules){
       handleFetchedData = values => {
         let errors = {};
         _.map(values, (value, name) => {
-          validate(value, rules[name], error => {
+          validate(value, this.rules[name], error => {
             if (error){
               errors[name] = error;
               this.validFields[name] = false;
@@ -59,7 +60,7 @@ export function withForm(rules){
         let errors = {};
         _.map(elements, e => {
           if (e.type && e.type != 'submit'){
-            validate(e.value, rules[e.name], error => {
+            validate(e.value, this.this.rules[e.name], error => {
               if (error){
                 errors[e.name] = error;
                 this.validFields[e.name] = false;
@@ -78,7 +79,7 @@ export function withForm(rules){
       handleChange = e => {
         const { name, value } = e.target;
         if (this.onValidates[name]) {
-          validate(value, rules[name], error => {
+          validate(value, this.rules[name], error => {
             if (error) {
               this.validFields[name] = false;
               this.setState({ 
@@ -105,7 +106,7 @@ export function withForm(rules){
       handleBlur = (e) => {
         const { name, value } = e.target;
         this.onValidates[name] = true;
-        validate(value, rules[name], error => {
+        validate(value, this.rules[name], error => {
           if (error) {
             this.validFields[name] = false;
             this.setState({ 
@@ -124,6 +125,11 @@ export function withForm(rules){
           }
         });
       }
+
+      ruleChanged = (name, rule) => {
+        this.rules[name] = rule;
+        console.log("this.rules: ", this.rules)
+      }
   
       render(){
         return (
@@ -137,6 +143,7 @@ export function withForm(rules){
             handleBlur={this.handleBlur}
             handleSubmit={this.handleSubmit}
             handleFetchedData={this.handleFetchedData}
+            ruleChanged={this.ruleChanged}
           />
         )
       }

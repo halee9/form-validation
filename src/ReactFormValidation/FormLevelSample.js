@@ -44,7 +44,10 @@ class FormLevelSample extends Component {
   }
 
   render() {
-    const { handleChange, handleBlur, handleSubmit, values, errors, validForm } = this.props;
+    const { handleChange, handleBlur, handleSubmit, values, errors, validForm, ruleChanged } = this.props;
+    values.name && (values.name.length > 5) ? 
+      ruleChanged("description", [required(), minLength(5)()]) : 
+      ruleChanged("description", [false, minLength(5)()]);
     return (
       <div>
         <h3>Form Level Validation Sample with HOC</h3>
