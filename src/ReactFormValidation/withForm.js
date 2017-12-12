@@ -94,7 +94,8 @@ export function withForm(rules){
       }
     
       handleChange = e => {
-        const { name, value } = e.target;
+        const { name, value, type } = e.target;
+        if (type === 'select-one') this.onValidates[name] = true;
         if (this.onValidates[name]) {
           let data = [ { name, value }];
           this.validate(data, () => {
