@@ -48,7 +48,7 @@ export function withForm(rules){
           if (this.chainRules[name]){
             const [dest, fn] = this.chainRules[name];
             newItems.push({ name: dest, value: this.state.values[dest]});
-            this.rules[dest] = fn(this.state.values[name]);
+            this.rules[dest] = fn(this.state.values[name] || '');
           }
         });
 
