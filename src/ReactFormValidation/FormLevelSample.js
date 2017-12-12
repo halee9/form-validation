@@ -12,30 +12,20 @@ import { withForm } from './withForm';
 const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
 const rules = {
-  name: [required("You can set customized message"), minLength(5)(), maxLength(20)()],
+  name: [required("Name is required."), minLength(5)(), maxLength(20)()],
   // set false at first index if the field is optional.
-  
-  // description: [false, minLength(5)()],
-  description: (field, value) => {
-    if (field === 'name') {
-      if (value.length > 7){
-        return [required(), minLength(5)()];
-      }
-      else return [false, minLength(5)()];
-    } 
-    return false;
-  },
-  // price: (field, value) => {
-  //   if (field === 'name') {
-  //     if (value.length > 7){
-  //       return [required(), number()];
-  //     }
-  //     else return [false, number()];
-  //   } 
-  //   return false;
-  // },
+  description: [false, minLength(5)()],
   price: [required(), number()],
   category: [required()],
+}
+
+const conditionalRules = {
+  name: ["description", (value) => {
+    if (value.length > 7){
+      return [required(), minLength(5)()];
+    }
+    else return [false, minLength(5)()];
+  }]
 }
 
 const fetchedData = {
@@ -62,8 +52,13 @@ class FormLevelSample extends Component {
     
   }
 
+  componentDidMount(){
+    const { values, ruleChanged } = this.props;
+    ruleChanged(conditionalRules);
+  }
+
   render() {
-    const { handleChange, handleBlur, handleSubmit, values, errors, validForm } = this.props;
+    const { handleChange, handleBlur, handleSubmit, values, errors, validForm, ruleChanged } = this.props;
     return (
       <div>
         <h3>Form Level Validation Sample with HOC</h3>

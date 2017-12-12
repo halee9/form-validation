@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
+import {
+  required, minLength, maxLength, number
+} from './rules';
+
 const validateField = (value, rules) => {
   let error = false;
   for (let i=0; i<rules.length; i++){
@@ -30,42 +34,42 @@ export function withForm(rules){
         errors: {},
         validForm: false,
       }
+      rules = rules;
       chainRules = {};
-      rules = _.reduce(rules, (acc, rule, key) => {
-        if (_.isFunction(rule)){
-          this.chainRules[key] = rule;
-        }
-        else acc[key] = rule;
-        // console.log(acc, this.chainRules)
-        return acc;
-      },{});
 
-      validate = (name, value, callback) => {
-        let error = false;
-        const rules = this.rules[name];
-        if (_.isArray(rules)){
-          error = validateField(value, rules);
-        }
-        if (error) {
-          this.validFields[name] = false;
-          this.setState({ 
-            values: { ...this.state.values, [name]: value },
-            errors: { ...this.state.errors, [name]: error },
-            validForm: _.every(this.validFields)
-          }, () => {
-            if (callback) callback();
-          })
-        }
-        else {
-          this.validFields[name] = true;
-          this.setState({ 
-            values: { ...this.state.values, [name]: value },
-            errors: { ...this.state.errors, [name]: '' },
-            validForm: _.every(this.validFields)
-          }, () => {
-            if (callback) callback();
-          })
-        }
+      validate = (items, callback) => {
+        let errors = {};
+        let values = {};
+        let newItems = [];
+
+        items.forEach(item => {
+          const { name, value } = item;
+          newItems.push(item);
+          if (this.chainRules[name]){
+            const [dest, fn] = this.chainRules[name];
+            newItems.push({ name: dest, value: this.state.values[dest]});
+            this.rules[dest] = fn(this.state.values[name]);
+          }
+        });
+
+        newItems.forEach(item => {
+          const { name, value } = item;
+          let error = '';
+          const rules = this.rules[name];
+          if (_.isArray(rules)){
+            error = validateField(value, rules);
+            this.validFields[name] = error ? false : true;
+          }
+          errors[name] = error;
+          values[name] = value;
+        });
+        this.setState({ 
+          values: { ...this.state.values, ...values },
+          errors: { ...this.state.errors, ...errors },
+          validForm: _.every(this.validFields)
+        }, () => {
+          if (callback) callback();
+        });
       }
       
   
@@ -74,53 +78,26 @@ export function withForm(rules){
       }
 
       handleFetchedData = values => {
-        let errors = {};
-        _.map(values, (value, name) => {
-          const error = validateField(value, this.rules[name]);
-          if (error){
-            errors[name] = error;
-            this.validFields[name] = false;
-          }
-          else this.validFields[name] = true;
-          this.onValidates[name] = true;
+        const data = _.map(values, (value, name) => {
+          return { name, value };
         });
-        this.setState({ values, errors, validForm: _.every(this.validFields)});
-        
+        this.validate(data);
       }
   
       handleSubmit = (e, callback) => {
         if (e) e.preventDefault();
         const elements = e.target.elements;
-        let errors = {};
-        _.map(elements, e => {
-          if (e.type && e.type != 'submit'){
-            const error = validateField(e.value, this.rules[e.name]);
-            if (error){
-              errors[e.name] = error;
-              this.validFields[e.name] = false;
-            }
-            else this.validFields[e.name] = true;
-            this.onValidates[e.name] = true;
-          }
-        })
-        const validForm = _.every(this.validFields);
-        this.setState({ errors, validForm }, () => {
-          if (callback) callback(validForm);
+        const data = _.map(elements, e => {
+          return { name: e.name, value: e.value };
         });
+        this.validate(data);
       }
     
       handleChange = e => {
         const { name, value } = e.target;
         if (this.onValidates[name]) {
-          this.validate(name, value, () => {
-            // TODO: have to able to multi chaining rules!!
-            _.map(this.chainRules, (chain, key) => {
-              const rule = chain(name, this.state.values[name]);
-              if (rule){
-                this.rules[key] = rule;
-                this.validate(key, this.state.values.description);
-              }
-            })
+          let data = [ { name, value }];
+          this.validate(data, () => {
           });
         }
         else {
@@ -131,13 +108,12 @@ export function withForm(rules){
       handleBlur = (e) => {
         const { name, value } = e.target;
         this.onValidates[name] = true;
-        this.validate(name, value);
+        const data = [ { name, value }];
+        this.validate(data);
       }
 
-      ruleChanged = (name, rule) => {
-        if (this.rules[name] !== rule){
-          this.rules[name] = rule;
-        }
+      ruleChanged = (rule) => {
+        this.chainRules = rule;
       }
   
       render(){
