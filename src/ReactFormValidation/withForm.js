@@ -83,7 +83,7 @@ export function withForm(rules){
       handleSubmit = (e, callback) => {
         if (e) e.preventDefault();
         const elements = e.target.elements;
-        const data = _.map(elements, e => {
+        const data = _.filter(elements, e => e.type !== 'submit').map(e => {
           return { name: e.name, value: e.value };
         });
         this.validate(data);
