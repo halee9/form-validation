@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import {
-  required, minLength, maxLength, number
+  required, minLength, maxLength, number, phoneNumber
 } from './rules';
 
 import { withForm } from './withForm';
+import { InputPhoneNumberWithCountry } from './InputPhoneNumberWithCountry';
 
 const categoriesArray = [ "Grocery", "Beverage", "Stationary", "Others" ];
 
@@ -17,6 +18,8 @@ const rules = {
   description: [false, minLength(5)()],
   price: [required(), number()],
   category: [required()],
+  countryCode: [false],
+  phoneNumber: [required(), minLength(9)()],
 }
 
 const conditionalRules = {
@@ -83,7 +86,6 @@ class FormLevelSample extends Component {
               name='description'
               placeholder='Description of item (optional)'
               className='form-control'
-              component='textarea'
               rows='4'
               onChange={handleChange}
               onBlur={handleBlur}
@@ -110,7 +112,6 @@ class FormLevelSample extends Component {
             </div>
             <select
               name='category'
-              component='select'
               className='form-control'
               onChange={handleChange}
               onBlur={handleBlur}
@@ -130,6 +131,21 @@ class FormLevelSample extends Component {
             </select>
             <div className='text-danger'>{errors.category}</div>
           </div>
+
+          <div className="form-group">
+            <div>
+              <label>Phone Number: </label>
+            </div>
+            <InputPhoneNumberWithCountry 
+              selectName='countryCode'
+              inputName='phoneNumber'
+              className='form-control'
+              onChangeInput={handleChange}
+              onBlurInput={handleBlur}
+            />
+            <div className='text-danger'>{errors.phoneNumber}</div>
+          </div>
+
           <div className="text-center">
             <button type="submit" 
               className="btn btn-primary" 

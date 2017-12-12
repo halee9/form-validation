@@ -7,6 +7,8 @@
   },
   "dependencies": {
     "firebase": "^4.6.2",
+    "input-format": "^0.1.15",
+    "libphonenumber-js": "^0.4.44",
     "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
     "react": "^16.1.1",

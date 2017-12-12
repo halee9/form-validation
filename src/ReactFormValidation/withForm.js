@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-import {
-  required, minLength, maxLength, number
-} from './rules';
-
 const validateField = (value, rules) => {
   let error = false;
   for (let i=0; i<rules.length; i++){
@@ -95,6 +91,7 @@ export function withForm(rules){
     
       handleChange = e => {
         const { name, value, type } = e.target;
+        console.log(e.target)
         if (type === 'select-one') this.onValidates[name] = true;
         if (this.onValidates[name]) {
           let data = [ { name, value }];
@@ -108,6 +105,7 @@ export function withForm(rules){
     
       handleBlur = (e) => {
         const { name, value } = e.target;
+        console.log(e.target)
         this.onValidates[name] = true;
         const data = [ { name, value }];
         this.validate(data);
