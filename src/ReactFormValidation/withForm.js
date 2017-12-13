@@ -91,7 +91,6 @@ export function withForm(rules){
     
       handleChange = e => {
         const { name, value, type } = e.target;
-        console.log(e.target)
         if (type === 'select-one') this.onValidates[name] = true;
         if (this.onValidates[name]) {
           let data = [ { name, value }];
