@@ -136,12 +136,14 @@ class FormLevelSample extends Component {
           </div>
 
           <div className="form-group">
-            <div>
+            {/* <div>
               <label>Phone Number: </label>
-            </div>
+            </div> */}
             <InputPhoneNumberWithCountry 
-              selectName='countryCode'
-              selectClassName='form-control'
+              countryLabel='Country Code: '
+              phoneLabel='Phone Number: '
+              countryName='countryCode'
+              countryClassName='form-control'
               inputName='phoneNumber'
               inputClassName='form-control'
               onChangeInput={handleChange}

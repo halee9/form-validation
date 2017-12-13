@@ -39,7 +39,10 @@ export class InputPhoneNumberWithCountry extends Component {
   }
 
   render(){
-    const { selectName, inputName, inputClassName, withFlag, selectClassName } = this.props;
+    const { 
+      countryName, inputName, inputClassName, withFlag, countryClassName,
+      countryLabel, phoneLabel
+    } = this.props;
     let container, selectContainer, selectClass;
     if (withFlag) {
       container = 'container-flex';
@@ -49,13 +52,18 @@ export class InputPhoneNumberWithCountry extends Component {
     else {
       container = '';
       selectContainer = '';
-      selectClass = selectClassName;
+      selectClass = countryClassName;
     }
     return (
       <div className={container}>
         <div className={selectContainer}>
+          { countryLabel && 
+            <div>
+              <label>{countryLabel}</label>
+            </div>
+          }
           <select
-            name={selectName}
+            name={countryName}
             className={selectClass}
             value={this.state.ccode}
             onChange={this.handleChangeCode}
@@ -74,6 +82,11 @@ export class InputPhoneNumberWithCountry extends Component {
             </div>
           }
         </div>
+        { phoneLabel && 
+          <div>
+            <label>{phoneLabel}</label>
+          </div>
+        }
         <ReactInput
           name={inputName}
           className={inputClassName}
@@ -91,9 +104,9 @@ export class InputPhoneNumberWithCountry extends Component {
 
 InputPhoneNumberWithCountry.propTypes = {
   withFlag: PropTypes.bool,
-  selectName: PropTypes.string,
+  countryName: PropTypes.string,
   inputName: PropTypes.string,
-  selectClassName: PropTypes.string,
+  countryClassName: PropTypes.string,
   inputClassName: PropTypes.string,
   onChangeInput: PropTypes.func,
   onBlurInput: PropTypes.func,
