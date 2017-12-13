@@ -31,20 +31,16 @@ const conditionalRules = {
   }]
 }
 
-const fetchedData = {
-  name: "Test",
-  description: "description asfdf",
-  price: 9.99,
-  category: "Others"
-}
+const fetchData = ms => new Promise(resolve => setTimeout(() => {
+  resolve({
+    name: "Test",
+    description: "description asfdf",
+    price: 9.99,
+    category: "Others"
+  });
+}, ms))
 
 class FormLevelSample extends Component {
-  componentWillMount(){
-    const { params } = this.props.match;
-    if (params.id) {
-      this.props.handleFetchedData(fetchedData);
-    }
-  }
 
   handleSubmit = (e) => {
     this.props.handleSubmit(e, (res) => {
@@ -58,6 +54,13 @@ class FormLevelSample extends Component {
   componentDidMount(){
     const { values, ruleChanged } = this.props;
     ruleChanged(conditionalRules);
+
+    const { params } = this.props.match;
+    if (params.id) {
+      fetchData(3000).then((data) => {
+        this.props.handleFetchedData(data);
+      });
+    }
   }
 
   render() {
@@ -138,8 +141,9 @@ class FormLevelSample extends Component {
             </div>
             <InputPhoneNumberWithCountry 
               selectName='countryCode'
+              selectClassName='form-control'
               inputName='phoneNumber'
-              className='form-control'
+              inputClassName='form-control'
               onChangeInput={handleChange}
               onBlurInput={handleBlur}
             />

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './InputPhoneNumberWithCountry.css';
 
 import { asYouType } from 'libphonenumber-js'
@@ -38,13 +39,24 @@ export class InputPhoneNumberWithCountry extends Component {
   }
 
   render(){
-    const { selectName, inputName, className } = this.props;
+    const { selectName, inputName, inputClassName, withFlag, selectClassName } = this.props;
+    let container, selectContainer, selectClass;
+    if (withFlag) {
+      container = 'container-flex';
+      selectContainer = 'select-flag-container';
+      selectClass = 'select';
+    }
+    else {
+      container = '';
+      selectContainer = '';
+      selectClass = selectClassName;
+    }
     return (
-      <div className='container'>
-        <div className='select-container'>
+      <div className={container}>
+        <div className={selectContainer}>
           <select
             name={selectName}
-            className='select'
+            className={selectClass}
             value={this.state.ccode}
             onChange={this.handleChangeCode}
           >
@@ -52,17 +64,19 @@ export class InputPhoneNumberWithCountry extends Component {
               <option value={country.code} key={country.code}>{country.name}</option>
             ))}
           </select>
-          <div className='flag-container'>
-            <img
-              className='flag-image'
-              src={`${flagsPath}${this.state.ccode.toLowerCase()}.svg`}
-            />
-            <div className='select-arrow'></div>
-          </div>
+          { withFlag && 
+            <div className='flag-container'>
+              <img
+                className='flag-image'
+                src={`${flagsPath}${this.state.ccode.toLowerCase()}.svg`}
+              />
+              <div className='select-arrow'></div>
+            </div>
+          }
         </div>
         <ReactInput
           name={inputName}
-          className={className}
+          className={inputClassName}
           value={ this.state.value }
           onChange={this.handleChangePhoneNumber}
           onBlur={(e) => this.props.onBlurInput({ target: { value: e.target.value, name: inputName }})}
@@ -74,3 +88,17 @@ export class InputPhoneNumberWithCountry extends Component {
     )
   }
 }
+
+InputPhoneNumberWithCountry.propTypes = {
+  withFlag: PropTypes.bool,
+  selectName: PropTypes.string,
+  inputName: PropTypes.string,
+  selectClassName: PropTypes.string,
+  inputClassName: PropTypes.string,
+  onChangeInput: PropTypes.func,
+  onBlurInput: PropTypes.func,
+};
+
+InputPhoneNumberWithCountry.defaultProps = {
+  withFlag: false
+};

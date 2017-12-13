@@ -1,16 +1,16 @@
-.container {
+
+.container-flex {
   width: 100%;
-  padding: 10px;
   display: flex;
 }
 
-.select-container {
+.select-flag-container {
   position: relative;
   width: 3em;
   height: 1.25em;
 }
 
-.select {
+.select-flag-container .select {
   width: 4em;
   height: 2em;
   position: absolute;
@@ -27,12 +27,12 @@
   display: flex;
 }
 
-.flag-image {
+.flag-container .flag-image {
   height: 1.25em;
   border: 0.05em solid #ccc;
 }
 
-.select-arrow {
+.flag-container .select-arrow {
 	margin-left: 0.35em;
 	margin-top: 0.3em;
 	margin-bottom: 0.3em;
