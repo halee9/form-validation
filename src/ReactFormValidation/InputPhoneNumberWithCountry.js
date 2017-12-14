@@ -35,6 +35,10 @@ export class InputPhoneNumberWithCountry extends Component {
     this.setState({ ccode: e.target.value },() => {
         this.handleChangePhoneNumber(this.state.value);
     });
+    this.focus();
+  }
+
+  focus = () => {
     this.phoneInput.focus();
   }
 

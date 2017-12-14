@@ -64,6 +64,7 @@ export function withForm(rules){
           errors: { ...this.state.errors, ...errors },
           validForm: _.every(this.validFields)
         }, () => {
+          // console.log("after set state")
           if (callback) callback();
         });
       }
@@ -86,10 +87,11 @@ export function withForm(rules){
         const data = _.filter(elements, e => e.type !== 'submit').map(e => {
           return { name: e.name, value: e.value };
         });
-        this.validate(data);
+        this.validate(data, callback(this.state.validForm));
       }
     
       handleChange = e => {
+        // console.log("On Change event")
         const { name, value, type } = e.target;
         if (type === 'select-one') this.onValidates[name] = true;
         if (this.onValidates[name]) {
@@ -103,8 +105,9 @@ export function withForm(rules){
       }
     
       handleBlur = (e) => {
+        // console.log("Event blurrrr")
+        // if (e) e.stopPropagation();
         const { name, value } = e.target;
-        console.log(e.target)
         this.onValidates[name] = true;
         const data = [ { name, value }];
         this.validate(data);

@@ -47,6 +47,14 @@ class FormLevelSample extends Component {
       if (res) {
         alert("Form will be submitted!!");
       }
+      else {
+        for (const key in this.props.validFields){
+          if (!this.props.validFields[key]){
+            if (this[key].focus) this[key].focus();
+            break;
+          }
+        }
+      }
     });
     
   }
@@ -80,6 +88,7 @@ class FormLevelSample extends Component {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.name || ''}
+              ref={(input) => { this.name = input; }}
             /> 
             <div className='text-danger'>{errors.name}</div>      
           </div>
@@ -93,6 +102,7 @@ class FormLevelSample extends Component {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.description || ''}
+              ref={(input) => { this.description = input; }}
             /> 
             <div className='text-danger'>{errors.description}</div>           
           </div>
@@ -106,6 +116,7 @@ class FormLevelSample extends Component {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.price || ''}
+              ref={(input) => { this.price = input; }}
             />
             <div className='text-danger'>{errors.price}</div>
           </div>
@@ -119,6 +130,7 @@ class FormLevelSample extends Component {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.category || ''}
+              ref={(input) => { this.category = input; }}
             >
               <option />
               { _.map(categoriesArray, value => {
@@ -148,6 +160,7 @@ class FormLevelSample extends Component {
               inputClassName='form-control'
               onChangeInput={handleChange}
               onBlurInput={handleBlur}
+              ref={(input) => { this.phoneNumber = input; }}
             />
             <div className='text-danger'>{errors.phoneNumber}</div>
           </div>
