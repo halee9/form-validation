@@ -17,6 +17,7 @@ const rules = {
   // set false at first index if the field is optional.
   description: [false, minLength(5)()],
   price: [required(), number()],
+  onoff: [required()],
   category: [required()],
   countryCode: [false],
   phoneNumber: [required(), minLength(9)()],
@@ -120,6 +121,31 @@ class FormLevelSample extends Component {
             />
             <div className='text-danger'>{errors.price}</div>
           </div>
+
+          <div className="form-group">
+            <label>On Off button: </label>
+            <br />
+            <label className="radio-inline">
+              <input
+                name='onoff'
+                type='radio'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={'on'}
+              /> on
+            </label>
+            <label className="radio-inline">
+              <input
+                name='onoff'
+                type='radio'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={'off'}
+              /> off
+            </label>
+            <div className='text-danger'>{errors.price}</div>
+          </div>
+
           <div className="form-group">
             <div>
               <label>Category: </label>
