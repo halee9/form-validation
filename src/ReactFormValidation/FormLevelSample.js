@@ -20,7 +20,7 @@ const rules = {
   onoff: [required()],
   category: [required()],
   countryCode: [false],
-  phoneNumber: [required(), minLength(9)()],
+  phoneNumber: [required(), minLength(6)()],
 }
 
 const conditionalRules = {
@@ -186,6 +186,7 @@ class FormLevelSample extends Component {
               inputClassName='form-control'
               onChangeInput={handleChange}
               onBlurInput={handleBlur}
+              phoneMessage={errors.phoneNumber}
               ref={(input) => { this.phoneNumber = input; }}
             />
             <div className='text-danger'>{errors.phoneNumber}</div>

@@ -5,7 +5,8 @@ import './InputPhoneNumberWithCountry.css';
 import { asYouType } from 'libphonenumber-js'
 import { ReactInput, templateFormatter, templateParser, parseDigit } from 'input-format'
 
-const DEFAULT_TEMPLATE = 'xxx-xxx-xxxx';
+// const DEFAULT_TEMPLATE = 'xxx-xxx-xxxx';
+const DEFAULT_TEMPLATE = 'xxxxxxxxxxxxxxx';
 const DEFAULT_COUNTRY_CODE = 'US';
 
 const countryCodes = [
@@ -19,12 +20,14 @@ const flagsPath = 'https://lipis.github.io/flag-icon-css/flags/4x3/';
 export class InputPhoneNumberWithCountry extends Component {
   state = {
     value: '',
-    ccode: DEFAULT_COUNTRY_CODE,
+    // ccode: DEFAULT_COUNTRY_CODE,
+    ccode: '',
     formatter: {},
     template: DEFAULT_TEMPLATE
   }
 
   handleChangePhoneNumber = (value) => {
+    console.log("phone value: ", value)
     const formatter = new asYouType(this.state.ccode);
     formatter.input(value);
     this.setState({ value, formatter, template: formatter.template || DEFAULT_TEMPLATE });
@@ -72,6 +75,7 @@ export class InputPhoneNumberWithCountry extends Component {
             value={this.state.ccode}
             onChange={this.handleChangeCode}
           >
+            <option value={''}>Select</option>
             { countryCodes.map(country => (
               <option value={country.code} key={country.code}>{country.name}</option>
             ))}
